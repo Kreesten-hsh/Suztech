@@ -1,17 +1,122 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
+import { FaLaptopCode, FaTools, FaPalette, FaFileInvoice, FaArrowRight } from 'react-icons/fa';
 
 export default function Home(props) {
     return (
         <GuestLayout>
             <Head title="Accueil" />
 
-            {/* Tout le contenu de votre page d'accueil va ici */}
-            <div style={{ padding: '2rem', textAlign: 'center' }}>
-                <h1>Bienvenue chez Suztech</h1>
-                <p>Votre contenu professionnel commence ici.</p>
-            </div>
+            {/* Bannière principale */}
+            <section className="bg-gray-900 text-white py-20 lg:py-52 flex items-center justify-center">
+                <div className="text-center px-4">
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4">
+                        Fiable & Rapide
+                    </h1>
+                    <p className="text-lg sm:text-xl lg:text-2xl font-light mb-8">
+                        Technologie et Innovation, votre partenaire de confiance.
+                    </p>
+
+                    {/* Conteneur des boutons d'action */}
+                    <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+                        {/* Bouton pour les services */}
+                        <Link 
+                            href="/services" 
+                            className="bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-700 transition-colors duration-300"
+                        >
+                            Nos Services
+                        </Link>
+                        
+                        {/* Bouton pour la page de contact */}
+                        <Link 
+                            href="/contact" 
+                            className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-white hover:text-gray-900 transition-colors duration-300"
+                        >
+                            Contactez-nous
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
+            {/* Présentation de l'entreprise */}
+            <section className="py-16 px-6 lg:px-20 bg-white">
+                <div className="container mx-auto">
+                    <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
+                        Qui sommes-nous ?
+                    </h2>
+                    <p className="text-base sm:text-lg text-gray-700 text-center max-w-4xl mx-auto leading-relaxed">
+                        Chez Suztech, nous transformons la technologie en solutions concrètes pour les particuliers et les entreprises. Notre mission est de vous offrir des services informatiques et administratifs <span className="font-bold">fiables et rapides</span> qui simplifient votre quotidien.
+                    </p>
+                </div>
+            </section>
+
+            {/* Section "Nos Prestations" */}
+            <section className="py-16 px-6 lg:px-20 bg-gray-100">
+                <div className="container mx-auto">
+                    <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
+                        Nos Prestations
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {/* Carte de service 1 : Consultant en informatique */}
+                        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                            <div className="text-center mb-4">
+                                <FaLaptopCode className="text-6xl text-blue-600 mx-auto" />
+                            </div>
+                            <h3 className="text-xl font-semibold mb-2 text-center">Consultant en informatique</h3>
+                            <p className="text-gray-600 text-center">Bénéficiez de l'expertise de nos consultants pour optimiser votre infrastructure et booster votre productivité.</p>
+                        </div>
+
+                        {/* Carte de service 2 : Réparation d'appareils */}
+                        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                            <div className="text-center mb-4">
+                                <FaTools className="text-6xl text-blue-600 mx-auto" />
+                            </div>
+                            <h3 className="text-xl font-semibold mb-2 text-center">Réparation d'appareils</h3>
+                            <p className="text-gray-600 text-center">Nous redonnons vie à vos appareils électroniques, du diagnostic à la réparation rapide et efficace.</p>
+                        </div>
+
+                        {/* Carte de service 3 : Création de Logos */}
+                        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                            <div className="text-center mb-4">
+                                <FaPalette className="text-6xl text-blue-600 mx-auto" />
+                            </div>
+                            <h3 className="text-xl font-semibold mb-2 text-center">Création de Logos</h3>
+                            <p className="text-gray-600 text-center">Votre image de marque est notre priorité. Nos designers créent des supports visuels uniques qui vous permettront de vous démarquer.</p>
+                        </div>
+
+                        {/* Carte de service 4 : Paiement de factures */}
+                        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                            <div className="text-center mb-4">
+                                <FaFileInvoice className="text-6xl text-blue-600 mx-auto" />
+                            </div>
+                            <h3 className="text-xl font-semibold mb-2 text-center">Paiement de factures</h3>
+                            <p className="text-gray-600 text-center">Simplifiez-vous la vie avec notre service de paiement de factures SONEB / SBEE.</p>
+                        </div>
+                    </div>
+                    <div className="text-center mt-12">
+                        <Link href="/services" className="bg-blue-600 mb-24 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center gap-2 mx-auto w-fit">
+                            Découvrez tous nos services <FaArrowRight className="ml-2 mt-1"/>
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
+            {/* Section Appel à l'action */}
+            <section className="bg-blue-600 text-white card py-12 text-center mb-44">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+                    Prêt à nous faire confiance ?
+                </h2>
+                <p className="text-lg mb-6">
+                    Contactez notre équipe dès aujourd'hui pour discuter de vos besoins. Nous sommes là pour vous accompagner dans votre réussite.
+                </p>
+                <Link
+                    href="/contact"
+                    className="bg-white text-blue-600 font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-200 transition-colors duration-300"
+                >
+                    Contactez-nous
+                </Link>
+            </section>
         </GuestLayout>
     );
 }

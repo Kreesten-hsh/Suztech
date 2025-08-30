@@ -6,7 +6,7 @@ export default function Guest({ children }) {
     return (
         <div>
             <Header />
-            <main>
+            <main className="pt-20">
                 {children}
             </main>
             <Footer />
