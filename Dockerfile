@@ -36,15 +36,15 @@ FROM nginx:1.25.3-alpine
 # Installer PHP-FPM dans cette image pour qu'il puisse communiquer avec Nginx
 RUN apk add --no-cache php82-fpm
 
-# Copie le code de l'application depuis l'étape de construction
+# Copier le code de l'application depuis l'étape de construction
 COPY --from=laravel_builder /var/www/html /var/www/html
 
-# Copie le fichier de configuration Nginx
+# Copier le fichier de configuration Nginx
 COPY .docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# Copier le script de démarrage et s'assurer qu'il est exécutable
-COPY entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh
+# Copier le script de démarrage directement dans le dossier de travail et le rendre exécutable
+COPY entrypoint.sh /var/www/html/entrypoint.sh
+RUN chmod +x /var/www/html/entrypoint.sh
 
 # Définir les permissions
 RUN chown -R nginx:nginx /var/www/html && chmod -R 775 /var/www/html/storage
@@ -53,4 +53,4 @@ RUN chown -R nginx:nginx /var/www/html && chmod -R 775 /var/www/html/storage
 EXPOSE 80
 
 # Commande de démarrage
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["/var/www/html/entrypoint.sh"]
