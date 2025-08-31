@@ -1,34 +1,51 @@
-# Utilise l'image PHP officielle comme base. C'est la fondation de notre environnement.
-FROM php:8.2-fpm
+# Étape 1 : Construction de l'application (PHP + JS)
+# Utilise une image PHP pour installer les dépendances PHP et un conteneur Node pour les dépendances JS.
+FROM php:8.2-fpm-alpine AS laravel_builder
 
-# Installe les dépendances système comme Git, Curl, et des librairies pour les images.
-# C'est essentiel pour que Composer et d'autres outils fonctionnent.
-RUN apt-get update && apt-get install -y \
+# Installer les dépendances système nécessaires
+RUN apk add --no-cache \
     git \
     curl \
     libpng-dev \
-    libjpeg-dev \
+    libjpeg-turbo-dev \
     libwebp-dev \
     zip \
     unzip \
+    nodejs \
+    npm \
     && docker-php-ext-configure gd --with-jpeg --with-webp \
     && docker-php-ext-install -j$(nproc) gd
 
-# Installe Composer, l'outil de gestion de dépendances de PHP.
+# Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Définit le répertoire de travail dans le conteneur.
+# Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Copie tous vos fichiers de projet dans le conteneur.
+# Copier les fichiers de l'application
 COPY . .
 
-# Installe Node.js et npm, les outils nécessaires pour React.
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs
+# Installer les dépendances PHP
+RUN composer install --no-dev --optimize-autoloader
 
-# Expose le port par défaut pour PHP-FPM, qui gérera les requêtes.
-EXPOSE 9000
+# Installer les dépendances Node et compiler les assets React
+RUN npm install && npm run build
 
-# Commande pour démarrer le serveur.
-CMD ["php-fpm"]
+# Étape 2 : Image finale (Production)
+# Utilise une image Nginx légère pour le service web
+FROM nginx:1.25.3-alpine
+
+# Copie le code de l'application depuis l'étape de construction
+COPY --from=laravel_builder /var/www/html /var/www/html
+
+# Copie le fichier de configuration Nginx
+COPY .docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+# Définir les permissions
+RUN chown -R www-data:www-data /var/www/html && chmod -R 775 /var/www/html/storage
+
+# Expose le port HTTP
+EXPOSE 80
+
+# Commande de démarrage
+CMD ["nginx", "-g", "daemon off;"]
