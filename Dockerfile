@@ -30,9 +30,7 @@ RUN composer install --no-dev --optimize-autoloader
 # Installer les dépendances Node et compiler les assets React
 RUN npm install && npm run build
 
-
 # Étape 2 : Image finale (Production)
-# Utilise une image Nginx légère
 FROM nginx:1.25.3-alpine
 
 # Installer PHP-FPM dans cette image pour qu'il puisse communiquer avec Nginx
