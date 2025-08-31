@@ -31,7 +31,7 @@ RUN composer install --no-dev --optimize-autoloader \
     && npm run build
 
 # Copie le fichier de configuration Nginx
-COPY .docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY .docker/nginx/default.conf /etc/nginx/nginx.conf
 
 # Définir les permissions
 # L'utilisateur `www-data` existe dans l'image PHP, donc cette commande fonctionnera
