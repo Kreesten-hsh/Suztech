@@ -3,14 +3,19 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\CustomAuthController;
+use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use Inertia\Inertia;
 
-// Routes publiques de navigation (site web)
+// Public routes
 Route::get('/', function () {
     return Inertia::render('Home');
 })->name('home');
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/about', function () {
     return Inertia::render('About');
@@ -24,25 +29,29 @@ Route::get('/contact', function () {
     return Inertia::render('Contact');
 })->name('contact');
 
-// Routes d'authentification (gérées par Breeze)
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+Route::get('/shop/{product}', [ShopController::class, 'show'])->name('shop.show');
 
+// Custom authentication routes
+Route::get('/login', [CustomAuthController::class, 'createLogin'])->name('login');
+Route::post('/login', [CustomAuthController::class, 'storeLogin']);
+Route::get('/register', [CustomAuthController::class, 'createRegister'])->name('register');
+Route::post('/register', [CustomAuthController::class, 'storeRegister']);
+Route::post('/logout', [CustomAuthController::class, 'destroy'])->name('logout');
+
+// Authenticated routes
 Route::middleware('auth')->group(function () {
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
-require __DIR__.'/auth.php';
+    // Admin routes with named prefixes
+    Route::middleware(['verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-// Routes du tableau de bord (administration)
-// Ces routes sont protégées par le middleware 'auth' et ont le préfixe 'admin'
-Route::middleware(['auth'])->prefix('admin')->group(function () {
-    // CRUD pour les catégories
-    Route::resource('categories', CategoryController::class)->except(['show']);
+        Route::resource('products', ProductController::class)->except(['show']);
+        Route::resource('categories', CategoryController::class)->except(['show']);
+    });
 
-    // CRUD pour les produits
-    Route::resource('products', ProductController::class)->except(['show']);
 });

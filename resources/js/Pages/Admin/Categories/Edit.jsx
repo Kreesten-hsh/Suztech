@@ -1,23 +1,23 @@
 import React from 'react';
 import { Head, useForm } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AdminLayout from '@/Layouts/AdminLayout';
 
-export default function Create({ auth }) {
-    const { data, setData, post, processing, errors } = useForm({
-        name: '',
+export default function Edit({ auth, category }) {
+    const { data, setData, put, processing, errors } = useForm({
+        name: category.name,
     });
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('admin.categories.store'));
+        put(route('admin.categories.update', category.id));
     };
 
     return (
-        <AuthenticatedLayout
+        <AdminLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Ajouter une catégorie</h2>}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Modifier une catégorie</h2>}
         >
-            <Head title="Ajouter une catégorie" />
+            <Head title="Modifier une catégorie" />
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -36,13 +36,13 @@ export default function Create({ auth }) {
                                     {errors.name && <div className="text-red-500 text-sm mt-1">{errors.name}</div>}
                                 </div>
                                 <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700" disabled={processing}>
-                                    Ajouter
+                                    Modifier
                                 </button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AdminLayout>
     );
 }

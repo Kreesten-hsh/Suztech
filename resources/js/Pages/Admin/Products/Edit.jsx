@@ -1,19 +1,20 @@
 import React from 'react';
 import { Head, useForm } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AdminLayout from '@/Layouts/AdminLayout';
 
-export default function Create({ auth, categories }) {
+export default function Edit({ auth, product, categories }) {
     const { data, setData, post, processing, errors } = useForm({
-        name: '',
-        category_id: '',
-        description: '',
-        price: '',
+        name: product.name,
+        category_id: product.category_id,
+        description: product.description,
+        price: product.price,
         images: null,
+        _method: 'put',
     });
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('admin.products.store'), {
+        post(route('admin.products.update', product.id), {
             forceFormData: true,
         });
     };
@@ -23,11 +24,11 @@ export default function Create({ auth, categories }) {
     };
 
     return (
-        <AuthenticatedLayout
+        <AdminLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Ajouter un produit</h2>}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Modifier un produit</h2>}
         >
-            <Head title="Ajouter un produit" />
+            <Head title="Modifier un produit" />
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -56,7 +57,6 @@ export default function Create({ auth, categories }) {
                                         onChange={(e) => setData('category_id', e.target.value)}
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
                                     >
-                                        <option value="">Sélectionner une catégorie</option>
                                         {categories.map(category => (
                                             <option key={category.id} value={category.id}>{category.name}</option>
                                         ))}
@@ -92,6 +92,11 @@ export default function Create({ auth, categories }) {
                                 {/* Champ Images */}
                                 <div className="mb-4">
                                     <label htmlFor="images" className="block text-sm font-medium text-gray-700">Images du produit</label>
+                                    <div className="flex space-x-2 my-2">
+                                        {product.images.map(image => (
+                                            <img key={image.id} src={`/storage/${image.path}`} alt="" className="h-16 w-16 object-cover rounded" />
+                                        ))}
+                                    </div>
                                     <input
                                         type="file"
                                         id="images"
@@ -101,16 +106,15 @@ export default function Create({ auth, categories }) {
                                         className="mt-1 block w-full"
                                     />
                                     {errors.images && <div className="text-red-500 text-sm mt-1">{errors.images}</div>}
-                                    {errors['images.0'] && <div className="text-red-500 text-sm mt-1">{errors['images.0']}</div>}
                                 </div>
                                 <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700" disabled={processing}>
-                                    Ajouter
+                                    Modifier
                                 </button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AdminLayout>
     );
 }
