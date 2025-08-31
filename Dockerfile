@@ -1,5 +1,4 @@
 # Étape 1 : Construction de l'application (PHP + JS)
-# Utilise une image PHP pour installer les dépendances PHP et un conteneur Node pour les dépendances JS.
 FROM php:8.2-fpm-alpine AS laravel_builder
 
 # Installer les dépendances système nécessaires
@@ -32,7 +31,6 @@ RUN composer install --no-dev --optimize-autoloader
 RUN npm install && npm run build
 
 # Étape 2 : Image finale (Production)
-# Utilise une image Nginx légère pour le service web
 FROM nginx:1.25.3-alpine
 
 # Copie le code de l'application depuis l'étape de construction
@@ -41,9 +39,8 @@ COPY --from=laravel_builder /var/www/html /var/www/html
 # Copie le fichier de configuration Nginx
 COPY .docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# Définir les permissions
-# L'utilisateur www-data existe déjà, donc cette commande fonctionnera maintenant
-RUN chown -R www-data:www-data /var/www/html && chmod -R 775 /var/www/html/storage
+# Définir les permissions en utilisant l'utilisateur 'nginx'
+RUN chown -R nginx:nginx /var/www/html && chmod -R 775 /var/www/html/storage
 
 # Expose le port HTTP
 EXPOSE 80
