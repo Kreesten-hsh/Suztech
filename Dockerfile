@@ -19,6 +19,10 @@ RUN apk add --no-cache \
 # Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Créer un utilisateur et un groupe www-data, car ils n'existent pas par défaut sur Alpine
+RUN addgroup -g 82 -S www-data \
+    && adduser -u 82 -D -S -G www-data www-data
+
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
