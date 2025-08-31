@@ -30,8 +30,13 @@ RUN composer install --no-dev --optimize-autoloader
 # Installer les dépendances Node et compiler les assets React
 RUN npm install && npm run build
 
+
 # Étape 2 : Image finale (Production)
+# Utilise une image Nginx légère
 FROM nginx:1.25.3-alpine
+
+# Installer PHP-FPM dans cette image pour qu'il puisse communiquer avec Nginx
+RUN apk add --no-cache php82-fpm
 
 # Copie le code de l'application depuis l'étape de construction
 COPY --from=laravel_builder /var/www/html /var/www/html
@@ -39,11 +44,15 @@ COPY --from=laravel_builder /var/www/html /var/www/html
 # Copie le fichier de configuration Nginx
 COPY .docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# Définir les permissions en utilisant l'utilisateur 'nginx'
+# Copie le script de démarrage et le rend exécutable
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Définir les permissions
 RUN chown -R nginx:nginx /var/www/html && chmod -R 775 /var/www/html/storage
 
 # Expose le port HTTP
 EXPOSE 80
 
 # Commande de démarrage
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["entrypoint.sh"]
