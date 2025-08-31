@@ -19,10 +19,6 @@ RUN apk add --no-cache \
 # Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Créer un utilisateur et un groupe www-data, car ils n'existent pas par défaut sur Alpine
-RUN addgroup -g 82 -S www-data \
-    && adduser -u 82 -D -S -G www-data www-data
-
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
@@ -46,6 +42,7 @@ COPY --from=laravel_builder /var/www/html /var/www/html
 COPY .docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Définir les permissions
+# L'utilisateur www-data existe déjà, donc cette commande fonctionnera maintenant
 RUN chown -R www-data:www-data /var/www/html && chmod -R 775 /var/www/html/storage
 
 # Expose le port HTTP
