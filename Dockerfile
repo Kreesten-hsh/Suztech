@@ -42,8 +42,8 @@ COPY --from=laravel_builder /var/www/html /var/www/html
 # Copie le fichier de configuration Nginx
 COPY .docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# Copie le script de démarrage et le rend exécutable
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+# Copier le script de démarrage et s'assurer qu'il est exécutable
+COPY entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Définir les permissions
@@ -53,4 +53,4 @@ RUN chown -R nginx:nginx /var/www/html && chmod -R 775 /var/www/html/storage
 EXPOSE 80
 
 # Commande de démarrage
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
