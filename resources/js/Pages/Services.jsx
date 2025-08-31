@@ -107,8 +107,6 @@ export default function Services(props) {
                     </div>
                 </div>
             </motion.section>
-
-            ---
             
             {/* Section Services de Design */}
             <motion.section 
@@ -148,8 +146,6 @@ export default function Services(props) {
                     </div>
                 </div>
             </motion.section>
-
-            ---
 
             {/* Section Prestations administratives */}
             <motion.section 

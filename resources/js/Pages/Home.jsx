@@ -81,8 +81,7 @@ export default function Home({ latestProducts }) {
                     </p>
                 </div>
             </motion.section>
-            
-            ---
+        
 
             {/* Section "Nos Prestations" */}
             <motion.section
@@ -137,14 +136,13 @@ export default function Home({ latestProducts }) {
                         variants={itemVariants}
                         className="text-center mt-12"
                     >
-                        <Link href="/services" className="bg-blue-600 mb-12 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center gap-2 mx-auto w-fit">
+                        <Link href="/services" className="bg-blue-600 mb-12 text-white font-bold py-3 px-8 rounded-full text-md hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center gap-2 mx-auto w-fit">
                             Découvrez tous nos services <FaArrowRight className="ml-2 mt-1"/>
                         </Link>
                     </motion.div>
                 </div>
             </motion.section>
 
-            ---
 
             {/* Nouvelle section pour les produits */}
             <motion.section
@@ -220,7 +218,6 @@ export default function Home({ latestProducts }) {
                 </div>
             </motion.section>
 
-            ---
 
             {/* Section Appel à l'action */}
             <motion.section
