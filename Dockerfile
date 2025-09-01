@@ -10,12 +10,13 @@ RUN apk add --no-cache \
     libjpeg-turbo-dev \
     libwebp-dev \
     mariadb-dev \
+    sqlite-dev \
     zip \
     unzip \
     nodejs \
     npm \
     && docker-php-ext-configure gd --with-jpeg --with-webp \
-    && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql
+    && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql pdo_sqlite
 
 # Installe Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
