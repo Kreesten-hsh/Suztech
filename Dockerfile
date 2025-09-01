@@ -26,10 +26,19 @@ COPY . /var/www/html
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
+# Copie le fichier .env.example vers .env
+RUN cp .env.example .env
+
 # Installe les dépendances PHP et Node.js
 RUN composer install --no-dev --optimize-autoloader \
     && npm install \
     && npm run build
+
+# Génère la clé d'application Laravel
+RUN php artisan key:generate
+
+# Cache la configuration
+RUN php artisan config:cache
 
 # Copie le fichier de configuration Nginx
 COPY .docker/nginx/default.conf /etc/nginx/nginx.conf
