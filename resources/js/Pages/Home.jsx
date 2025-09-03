@@ -1,11 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { FaLaptopCode, FaTools, FaPalette, FaFileInvoice, FaArrowRight } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
 export default function Home({ latestProducts }) {
-    // Variants pour les animations
+    // Array of image URLs for the banner slideshow
+    const bannerImages = [
+        'https://images.unsplash.com/photo-1516321497-2b73f8a0e8d3?q=80&w=2940&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2940&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1579782522770-985e5109b8d0?q=80&w=2940&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2940&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1504384308051-57425110d73a?q=80&w=2940&auto=format&fit=crop',
+    ];
+
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    // Use effect to handle automatic image change
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setCurrentImageIndex(prevIndex => (prevIndex + 1) % bannerImages.length);
+        }, 5000); // Change image every 5 seconds
+
+        // Cleanup the interval when the component unmounts
+        return () => clearInterval(intervalId);
+    }, [bannerImages.length]);
+
+    // Variants for animations
     const containerVariants = {
         hidden: { opacity: 0, y: 50 },
         visible: {
@@ -28,42 +49,70 @@ export default function Home({ latestProducts }) {
         <GuestLayout>
             <Head title="Accueil" />
 
-            {/* Bannière principale */}
-            <motion.section 
-                className="bg-gray-900 text-white py-20 lg:py-52 flex items-center justify-center"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1 }}
-            >
-                <div className="text-center px-4">
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4">
-                        Fiable & Rapide
-                    </h1>
-                    <p className="text-lg sm:text-xl lg:text-2xl font-light mb-8">
-                        Technologie et Innovation, votre partenaire de confiance.
-                    </p>
-
-                    {/* Conteneur des boutons d'action */}
-                    <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-                        {/* Bouton pour les services */}
-                        <Link 
-                            href="/services" 
-                            className="bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-700 transition-colors duration-300"
+            {/* Main banner with fluid image slideshow */}
+            <section className="relative w-full h-96 lg:h-[700px] overflow-hidden">
+                {bannerImages.map((image, index) => (
+                    <motion.div
+                        key={index}
+                        className="absolute inset-0 w-full h-full"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: index === currentImageIndex ? 1 : 0 }}
+                        transition={{ duration: 1.5, ease: "easeInOut" }}
+                    >
+                        <img
+                            src={image}
+                            alt={`Slide ${index + 1}`}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = "https://placehold.co/1920x1080/E0F7FA/000?text=Image+indisponible";
+                            }}
+                        />
+                    </motion.div>
+                ))}
+                
+                {/* Overlay with text and buttons */}
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-start justify-center p-4 pt-16 lg:pt-36">
+                    <div className="text-center text-white">
+                        <motion.h1 
+                            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4"
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1 }}
                         >
-                            Nos Services
-                        </Link>
-                        
-                        {/* Bouton pour la page de contact */}
-                        <Link 
-                            href="/contact" 
-                            className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-white hover:text-gray-900 transition-colors duration-300"
+                            Fiable & Rapide
+                        </motion.h1>
+                        <motion.p
+                            className="text-lg sm:text-xl lg:text-2xl font-light mb-8"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5, duration: 1 }}
                         >
-                            Contactez-nous
-                        </Link>
+                            Technologie et Innovation, votre partenaire de confiance.
+                        </motion.p>
+                        <motion.div
+                            className="flex flex-col sm:flex-row justify-center items-center gap-4"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 1, duration: 0.5 }}
+                        >
+                            <Link 
+                                href="/services" 
+                                className="bg-cyan-600 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-cyan-700 transition-colors duration-300"
+                            >
+                                Nos Services
+                            </Link>
+                            <Link 
+                                href="/contact" 
+                                className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-white hover:text-slate-900 transition-colors duration-300"
+                            >
+                                Contactez-nous
+                            </Link>
+                        </motion.div>
                     </div>
                 </div>
-            </motion.section>
-
+            </section>
+            
             {/* Présentation de l'entreprise */}
             <motion.section
                 className="py-16 px-6 lg:px-20 bg-white"
@@ -77,7 +126,7 @@ export default function Home({ latestProducts }) {
                         Qui sommes-nous ?
                     </h2>
                     <p className="text-base sm:text-lg text-gray-700 text-center max-w-4xl mx-auto leading-relaxed">
-                        Chez Suztech, nous transformons la technologie en solutions concrètes pour les particuliers et les entreprises. Notre mission est de vous offrir des services informatiques et administratifs <span className="font-bold">fiables et rapides</span> qui simplifient votre quotidien.
+                        Chez <span className="font-bold">SUZTECH</span>, nous transformons la technologie en solutions concrètes pour les particuliers et les entreprises. Notre mission est de vous offrir des services informatiques et administratifs <span className="font-bold">fiables et rapides</span> qui simplifient votre quotidien.
                     </p>
                 </div>
             </motion.section>
@@ -85,7 +134,7 @@ export default function Home({ latestProducts }) {
 
             {/* Section "Nos Prestations" */}
             <motion.section
-                className="py-16 px-6 lg:px-20 bg-gray-100"
+                className="py-16 px-6 lg:px-20 bg-gray-50"
                 variants={containerVariants}
                 initial="hidden"
                 whileInView="visible"
@@ -99,7 +148,7 @@ export default function Home({ latestProducts }) {
                         {/* Carte de service 1 : Consultant en informatique */}
                         <motion.div variants={itemVariants} className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                             <div className="text-center mb-4">
-                                <FaLaptopCode className="text-6xl text-blue-600 mx-auto" />
+                                <FaLaptopCode className="text-6xl text-cyan-600 mx-auto" />
                             </div>
                             <h3 className="text-xl font-semibold mb-2 text-center">Consultant en informatique</h3>
                             <p className="text-gray-600 text-center">Bénéficiez de l'expertise de nos consultants pour optimiser votre infrastructure et booster votre productivité.</p>
@@ -108,7 +157,7 @@ export default function Home({ latestProducts }) {
                         {/* Carte de service 2 : Réparation d'appareils */}
                         <motion.div variants={itemVariants} className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                             <div className="text-center mb-4">
-                                <FaTools className="text-6xl text-blue-600 mx-auto" />
+                                <FaTools className="text-6xl text-cyan-600 mx-auto" />
                             </div>
                             <h3 className="text-xl font-semibold mb-2 text-center">Réparation d'appareils</h3>
                             <p className="text-gray-600 text-center">Nous redonnons vie à vos appareils électroniques, du diagnostic à la réparation rapide et efficace.</p>
@@ -117,7 +166,7 @@ export default function Home({ latestProducts }) {
                         {/* Carte de service 3 : Création de Logos */}
                         <motion.div variants={itemVariants} className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                             <div className="text-center mb-4">
-                                <FaPalette className="text-6xl text-blue-600 mx-auto" />
+                                <FaPalette className="text-6xl text-cyan-600 mx-auto" />
                             </div>
                             <h3 className="text-xl font-semibold mb-2 text-center">Création de Logos</h3>
                             <p className="text-gray-600 text-center">Votre image de marque est notre priorité. Nos designers créent des supports visuels uniques qui vous permettront de vous démarquer.</p>
@@ -126,7 +175,7 @@ export default function Home({ latestProducts }) {
                         {/* Carte de service 4 : Paiement de factures */}
                         <motion.div variants={itemVariants} className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                             <div className="text-center mb-4">
-                                <FaFileInvoice className="text-6xl text-blue-600 mx-auto" />
+                                <FaFileInvoice className="text-6xl text-cyan-600 mx-auto" />
                             </div>
                             <h3 className="text-xl font-semibold mb-2 text-center">Paiement de factures</h3>
                             <p className="text-gray-600 text-center">Simplifiez-vous la vie avec notre service de paiement de factures SONEB / SBEE.</p>
@@ -136,7 +185,7 @@ export default function Home({ latestProducts }) {
                         variants={itemVariants}
                         className="text-center mt-12"
                     >
-                        <Link href="/services" className="bg-blue-600 mb-12 text-white font-bold py-3 px-8 rounded-full text-md hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center gap-2 mx-auto w-fit">
+                        <Link href="/services" className="bg-cyan-600 mb-12 text-white font-bold py-3 px-8 rounded-full text-md hover:bg-cyan-700 transition-colors duration-300 flex items-center justify-center gap-2 mx-auto w-fit">
                             Découvrez tous nos services <FaArrowRight className="ml-2 mt-1"/>
                         </Link>
                     </motion.div>
@@ -188,7 +237,7 @@ export default function Home({ latestProducts }) {
                                         <div className="mt-5">
                                             <Link 
                                                 href={route('shop.show', product.id)}
-                                                className="inline-block w-full px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+                                                className="inline-block w-full px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-cyan-600 hover:bg-cyan-700 transition-colors"
                                             >
                                                 Voir détails
                                             </Link>
@@ -207,7 +256,7 @@ export default function Home({ latestProducts }) {
                     <div className="text-center mt-12">
                         <Link 
                             href={route('shop.index')} 
-                            className="inline-flex items-center px-8 py-4 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-green-500 hover:bg-green-600 transition-colors transform hover:scale-105"
+                            className="inline-flex items-center px-8 py-4 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-cyan-600 hover:bg-cyan-700 transition-colors transform hover:scale-105"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -221,7 +270,7 @@ export default function Home({ latestProducts }) {
 
             {/* Section Appel à l'action */}
             <motion.section
-                className="bg-blue-600 text-white card py-12 text-center mb-44"
+                className="bg-cyan-600 text-white card py-12 text-center mb-44"
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
@@ -235,7 +284,7 @@ export default function Home({ latestProducts }) {
                 </p>
                 <Link
                     href="/contact"
-                    className="bg-white text-blue-600 font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-200 transition-colors duration-300"
+                    className="bg-white text-cyan-600 font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-200 transition-colors duration-300"
                 >
                     Contactez-nous
                 </Link>

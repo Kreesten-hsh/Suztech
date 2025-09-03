@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
@@ -90,6 +91,8 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images_to_delete' => 'nullable|array',
+            'images_to_delete.*' => 'integer|exists:product_images,id',
         ]);
 
         // Mise à jour des données du produit
@@ -100,16 +103,21 @@ class ProductController extends Controller
             'description' => $request->description,
             'price' => $request->price,
         ]);
-        
-        // Gestion des images
-        if ($request->hasFile('images')) {
-            // Supprimer les anciennes images
-            foreach ($product->images as $image) {
-                Storage::disk('public')->delete($image->path);
-                $image->delete();
-            }
 
-            // Enregistrer les nouvelles images
+        // Gestion des images
+        // Supprimer les images marquées pour suppression
+        if ($request->has('images_to_delete') && is_array($request->images_to_delete)) {
+            foreach ($request->images_to_delete as $imageId) {
+                $image = ProductImage::find($imageId);
+                if ($image && $image->product_id == $product->id) {
+                    Storage::disk('public')->delete($image->path);
+                    $image->delete();
+                }
+            }
+        }
+
+        // Ajouter les nouvelles images
+        if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('products', 'public');
                 $product->images()->create(['path' => $path]);

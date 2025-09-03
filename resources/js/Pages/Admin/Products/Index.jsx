@@ -69,17 +69,18 @@ export default function Index({ auth, products }) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="flex justify-end mb-4">
-                        <Link href={route('admin.products.create')} className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700">
+                        <Link href={route('admin.products.create')} className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 flex items-center gap-2">
+                            <FaPlus className="inline-block mr-2" />
                             Ajouter un produit
                         </Link>
                     </div>
 
                     {/* Vue pour les grands écrans (le tableau) */}
-                    <div className="hidden md:block">
+                    <div className="hidden md:block overflow-x-auto rounded-lg shadow-md">
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-40">Images</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prix</th>
@@ -90,20 +91,29 @@ export default function Index({ auth, products }) {
                                 {products && products.data && products.data.length > 0 ? (
                                     products.data.map(product => (
                                         <tr key={product.id}>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                {product.images && product.images.length > 0 && (
-                                                    <img src={`/storage/${product.images[0].path}`} alt={product.name} className="h-12 w-12 object-cover rounded-full" />
-                                                )}
+                                            <td className="px-6 py-4">
+                                                <div className="flex flex-wrap gap-2">
+                                                    {product.images && product.images.length > 0 && (
+                                                        product.images.map((image, index) => (
+                                                            <img
+                                                                key={index}
+                                                                src={`/storage/${image.path}`}
+                                                                alt={`${product.name} image ${index + 1}`}
+                                                                className="h-12 w-12 object-cover rounded-md"
+                                                            />
+                                                        ))
+                                                    )}
+                                                </div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">{product.name}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{product.category.name}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{product.price} FCFA</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <Link href={route('admin.products.edit', product.id)} className="text-indigo-600 hover:text-indigo-900 mr-4">
-                                                    Modifier
+                                                    <FaEdit className="inline-block" />
                                                 </Link>
                                                 <button onClick={() => openConfirmModal(product.id)} className="text-red-600 hover:text-red-900">
-                                                    Supprimer
+                                                    <FaTrash className="inline-block" />
                                                 </button>
                                             </td>
                                         </tr>
@@ -124,22 +134,31 @@ export default function Index({ auth, products }) {
                         {products && products.data && products.data.length > 0 ? (
                             products.data.map(product => (
                                 <div key={product.id} className="border-b border-gray-200 last:border-b-0 py-4">
-                                    <div className="flex items-start mb-2">
-                                        {product.images && product.images.length > 0 && (
-                                            <img src={`/storage/${product.images[0].path}`} alt={product.name} className="h-16 w-16 object-cover rounded-md mr-4" />
-                                        )}
+                                    <div className="flex flex-col mb-2">
+                                        <div className="flex flex-wrap gap-2 mb-2">
+                                            {product.images && product.images.length > 0 && (
+                                                product.images.map((image, index) => (
+                                                    <img
+                                                        key={index}
+                                                        src={`/storage/${image.path}`}
+                                                        alt={`${product.name} image ${index + 1}`}
+                                                        className="h-16 w-16 object-cover rounded-md shadow-sm"
+                                                    />
+                                                ))
+                                            )}
+                                        </div>
                                         <div className="flex-1">
                                             <div className="font-bold text-lg">{product.name}</div>
                                             <div className="text-sm text-gray-500 mt-1">Catégorie : {product.category.name}</div>
-                                            <div className="text-sm text-gray-500 mt-1">Prix : {product.price}€</div>
+                                            <div className="text-sm text-gray-500 mt-1">Prix : {product.price} FCFA</div>
                                         </div>
                                     </div>
-                                    <div className="mt-4 flex justify-end text-sm font-medium">
-                                        <Link href={route('admin.products.edit', product.id)} className="text-indigo-600 hover:text-indigo-900 mr-4">
-                                            Modifier
+                                    <div className="mt-4 flex justify-end text-sm font-medium space-x-4">
+                                        <Link href={route('admin.products.edit', product.id)} className="text-indigo-600 hover:text-indigo-900 flex items-center">
+                                            <FaEdit className="mr-1" /> Modifier
                                         </Link>
-                                        <button onClick={() => openConfirmModal(product.id)} className="text-red-600 hover:text-red-900">
-                                            Supprimer
+                                        <button onClick={() => openConfirmModal(product.id)} className="text-red-600 hover:text-red-900 flex items-center">
+                                            <FaTrash className="mr-1" /> Supprimer
                                         </button>
                                     </div>
                                 </div>

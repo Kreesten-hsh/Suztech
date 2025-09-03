@@ -3,8 +3,7 @@ import { Head } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { motion } from 'framer-motion';
 import { 
-    FaHeart, FaBolt, FaShieldAlt, FaHeadset, FaStar, 
-    FaLaptopCode, FaPencilRuler, FaUserTie 
+    FaBolt, FaShieldAlt, FaHeadset, FaStar
 } from 'react-icons/fa';
 
 export default function About() {
@@ -19,28 +18,31 @@ export default function About() {
         hover: { scale: 1.05, boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)" }
     };
 
-    const iconVariants = {
-        visible: { rotate: 360, transition: { duration: 1, ease: "easeOut" } }
-    };
-
     return (
         <GuestLayout>
             <Head title="À propos" />
 
             {/* Section Bannière */}
             <motion.section
-                className="bg-gradient-to-r from-blue-800 to-indigo-900 text-white py-28 sm:py-36 text-center shadow-xl"
+                className="relative text-white py-28 sm:py-36 text-center shadow-xl overflow-hidden"
                 initial="hidden"
                 animate="visible"
                 variants={sectionVariants}
+                style={{
+                    backgroundImage: 'url("/images/imagescircuit2.webp")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat'
+                }}
             >
-                <div className="container mx-auto px-4">
+                <div className="absolute inset-0 bg-gray-900 bg-opacity-70"></div>
+                <div className="container mx-auto px-4 relative z-10">
                     <motion.h1 
                         className="text-4xl sm:text-6xl font-extrabold mb-6 tracking-tight"
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0, transition: { delay: 0.5 } }}
                     >
-                        À propos de <span className="text-yellow-400">Suztech</span>
+                        À propos de <span className="text-[#f8e71c]">SUZTECH</span>
                     </motion.h1>
                     <motion.p 
                         className="text-lg sm:text-xl lg:text-2xl font-light max-w-3xl mx-auto opacity-90"
@@ -62,9 +64,9 @@ export default function About() {
             >
                 <div className="container mx-auto max-w-7xl md:flex md:items-center md:space-x-12">
                     <div className="md:w-1/2">
-                        <h2 className="text-3xl sm:text-4xl font-bold mb-8">Notre Histoire</h2>
+                        <h2 className="text-3xl sm:text-4xl font-bold mb-8 text-gray-900">Notre Histoire</h2>
                         <p className="text-gray-700 lg:text-lg leading-relaxed">
-                            Fondée avec la passion de la technologie et l'innovation, Suztech s'est rapidement imposée 
+                            Fondée avec la passion de la technologie et l'innovation, <span className="font-bold">SUZTECH</span> s'est rapidement imposée 
                             comme un acteur incontournable dans le domaine des solutions informatiques au Bénin. <br /><br />
                             Notre entreprise a débuté avec une vision simple : rendre la technologie accessible à tous. 
                             Nous combinons expertise technique et service client exceptionnel. <br /><br />
@@ -77,8 +79,13 @@ export default function About() {
                             initial={{ scale: 0.5, opacity: 0 }}
                             whileInView={{ scale: 1, opacity: 1, transition: { type: "spring", stiffness: 100 } }}
                             viewport={{ once: true, amount: 0.5 }}
+                            className="w-full h-64 md:h-96 relative rounded-lg overflow-hidden shadow-lg"
                         >
-                            <FaHeart className="text-9xl text-blue-500 drop-shadow-lg" />
+                            <img 
+                                src="/images/logo2.jpg"
+                                alt="Représentation de l'innovation et de l'histoire de SUZTECH" 
+                                className="w-full h-full object-cover"
+                            />
                         </motion.div>
                     </div>
                 </div>
@@ -93,7 +100,7 @@ export default function About() {
                 variants={sectionVariants}
             >
                 <div className="container mx-auto text-center">
-                    <h2 className="text-3xl sm:text-4xl font-bold mb-14">Notre Approche</h2>
+                    <h2 className="text-3xl sm:text-4xl font-bold mb-14 text-gray-900">Notre Approche</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         <motion.div 
                             className="flex flex-col items-center p-8 bg-white rounded-xl shadow-md"
@@ -103,8 +110,8 @@ export default function About() {
                             viewport={{ once: true }}
                             variants={cardVariants}
                         >
-                            <FaBolt className="text-6xl text-blue-600" />
-                            <h3 className="text-2xl font-semibold mt-4 mb-2">Fiable & Rapide</h3>
+                            <FaBolt className="text-6xl text-cyan-600" />
+                            <h3 className="text-2xl font-semibold mt-4 mb-2 text-gray-800">Fiable & Rapide</h3>
                             <p className="text-gray-600">Des solutions efficaces dans les délais impartis.</p>
                         </motion.div>
                         <motion.div 
@@ -115,8 +122,8 @@ export default function About() {
                             viewport={{ once: true }}
                             variants={cardVariants}
                         >
-                            <FaShieldAlt className="text-6xl text-green-600" />
-                            <h3 className="text-2xl font-semibold mt-4 mb-2">Sécurité</h3>
+                            <FaShieldAlt className="text-6xl text-indigo-600" />
+                            <h3 className="text-2xl font-semibold mt-4 mb-2 text-gray-800">Sécurité</h3>
                             <p className="text-gray-600">Protection et confidentialité de vos données garanties.</p>
                         </motion.div>
                         <motion.div 
@@ -127,8 +134,8 @@ export default function About() {
                             viewport={{ once: true }}
                             variants={cardVariants}
                         >
-                            <FaHeadset className="text-6xl text-purple-600" />
-                            <h3 className="text-2xl font-semibold mt-4 mb-2">Service Client</h3>
+                            <FaHeadset className="text-6xl text-teal-600" />
+                            <h3 className="text-2xl font-semibold mt-4 mb-2 text-gray-800">Service Client</h3>
                             <p className="text-gray-600">Support réactif et accompagnement personnalisé.</p>
                         </motion.div>
                         <motion.div 
@@ -140,7 +147,7 @@ export default function About() {
                             variants={cardVariants}
                         >
                             <FaStar className="text-6xl text-yellow-500" />
-                            <h3 className="text-2xl font-semibold mt-4 mb-2">Qualité</h3>
+                            <h3 className="text-2xl font-semibold mt-4 mb-2 text-gray-800">Qualité</h3>
                             <p className="text-gray-600">Standards élevés pour tous nos produits et services.</p>
                         </motion.div>
                     </div>
@@ -156,8 +163,9 @@ export default function About() {
                 variants={sectionVariants}
             >
                 <div className="container mx-auto text-center">
-                    <h2 className="text-3xl sm:text-4xl font-bold mb-14">Notre Équipe</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto">
+                    <h2 className="text-3xl sm:text-4xl font-bold mb-14 text-gray-900">Notre Équipe</h2>
+                    <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-10 max-w-4xl mx-auto">
+                        {/* Profil du membre 1 */}
                         <motion.div 
                             className="p-8 bg-gray-50 rounded-xl shadow-md"
                             whileHover="hover"
@@ -166,11 +174,17 @@ export default function About() {
                             viewport={{ once: true }}
                             variants={cardVariants}
                         >
-                            <FaLaptopCode className="text-6xl text-blue-600 mx-auto" />
-                            <h4 className="text-2xl font-bold mt-4">Expert IT</h4>
-                            <p className="text-lg font-semibold text-gray-700">Responsable Technique</p>
-                            <p className="text-gray-600 mt-3">Spécialiste en infrastructure et sécurité informatique.</p>
+                            <img 
+                                src="/images/CEO.jpg" 
+                                alt="HOUNGBO Tobias" 
+                                className="w-40 h-40 rounded-full mx-auto mb-4 object-cover border-4 border-gray-200"
+                            />
+                            <h4 className="text-2xl font-bold mt-4 text-gray-800">HOUNGBO Tobias</h4>
+                            <p className="text-lg font-semibold text-gray-700">CEO de SUZTECH</p>
+                            <p className="text-gray-600 mt-3">Tobias, notre CEO, est le moteur stratégique de SUZTECH. Fort de son expérience en leadership et en informatique, il supervise chaque aspect de l'entreprise. Sa vision est de transformer les défis technologiques en opportunités de croissance, en cultivant une culture d'innovation et de confiance.</p>
                         </motion.div>
+
+                        {/* Profil du membre 2 */}
                         <motion.div 
                             className="p-8 bg-gray-50 rounded-xl shadow-md"
                             whileHover="hover"
@@ -179,23 +193,14 @@ export default function About() {
                             viewport={{ once: true }}
                             variants={cardVariants}
                         >
-                            <FaPencilRuler className="text-6xl text-purple-600 mx-auto" />
-                            <h4 className="text-2xl font-bold mt-4">Designer</h4>
-                            <p className="text-lg font-semibold text-gray-700">Responsable Créatif</p>
-                            <p className="text-gray-600 mt-3">Expert en design graphique et identité visuelle.</p>
-                        </motion.div>
-                        <motion.div 
-                            className="p-8 bg-gray-50 rounded-xl shadow-md"
-                            whileHover="hover"
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={{ once: true }}
-                            variants={cardVariants}
-                        >
-                            <FaUserTie className="text-6xl text-teal-600 mx-auto" />
-                            <h4 className="text-2xl font-bold mt-4">Consultant</h4>
-                            <p className="text-lg font-semibold text-gray-700">Responsable Commercial</p>
-                            <p className="text-gray-600 mt-3">Spécialiste des services administratifs et conseil.</p>
+                            <img 
+                                src="/images/Dev.jpg" 
+                                alt="AGBOTON Kreesten" 
+                                className="w-40 h-40 rounded-full mx-auto mb-4 object-cover border-4 border-gray-200"
+                            />
+                            <h4 className="text-2xl font-bold mt-4 text-gray-800">AGBOTON Kreesten</h4>
+                            <p className="text-lg font-semibold text-gray-700">Développeur Web</p>
+                            <p className="text-gray-600 mt-3">Kreesten est notre développeur web principal, un architecte du numérique passionné par la création de solutions sur mesure. Il excelle dans la conception de sites web modernes et performants. Son engagement pour la qualité et son attention aux détails sont essentiels pour offrir des produits numériques qui dépassent les attentes de nos clients.</p>
                         </motion.div>
                     </div>
                 </div>

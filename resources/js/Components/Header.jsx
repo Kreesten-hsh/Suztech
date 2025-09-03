@@ -37,7 +37,7 @@ export default function Header() {
                     whileTap={{ scale: 0.95 }}
                 >
                     <Link href="/">
-                        Suztech
+                        SUZTECH
                     </Link>
                 </motion.div>
 

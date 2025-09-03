@@ -8,6 +8,8 @@ use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Admin\CommentController as AdminCommentController;
 use Inertia\Inertia;
 
 // Public routes
@@ -52,6 +54,13 @@ Route::middleware('auth')->group(function () {
 
         Route::resource('products', ProductController::class)->except(['show']);
         Route::resource('categories', CategoryController::class)->except(['show']);
+        
+        // Routes pour la gestion des commentaires
+        Route::get('/comments', [AdminCommentController::class, 'index'])->name('comments.index');
+        Route::delete('/comments/{comment}', [AdminCommentController::class, 'destroy'])->name('comments.destroy');
     });
 
 });
+
+//Routes pour les commentaires
+Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');

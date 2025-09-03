@@ -36,20 +36,19 @@ class ShopController extends Controller
 
     public function show(Product $product)
     {
-        // Charge la catégorie et les images associées au produit
-        $product->load('category', 'images');
-
-        // Récupérer des produits similaires (par exemple, de la même catégorie, exclus le produit actuel)
-        $similarProducts = Product::where('category_id', $product->category_id)
-                                    ->where('id', '!=', $product->id)
-                                    ->with('images') // Charger les images pour les produits similaires
-                                    ->inRandomOrder() // Pour un peu de variété
-                                    ->take(4) // Limiter à 4 produits similaires
+        $similarProducts = Product::where('id', '!=', $product->id)
+                                    ->where('category_id', $product->category_id)
+                                    ->inRandomOrder()
+                                    ->limit(4)
                                     ->get();
+                                    
+        // Charge les commentaires liés au produit, triés par le plus récent
+        $comments = $product->comments()->latest()->get();
 
         return Inertia::render('Shop/Show', [
-            'product' => $product,
-            'similarProducts' => $similarProducts, // Passer les produits similaires à la vue
+            'product' => $product->load('images'),
+            'similarProducts' => $similarProducts->load('images'),
+            'comments' => $comments,
         ]);
     }
 }

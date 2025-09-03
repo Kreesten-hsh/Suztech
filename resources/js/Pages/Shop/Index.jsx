@@ -8,21 +8,12 @@ export default function Index({ products, categories }) {
     const { url } = usePage();
     const currentCategory = new URLSearchParams(url.split('?')[1])?.get('category');
 
-    // Génère le lien de filtrage
     const getCategoryLink = (categoryId) => route('shop.index', { category: categoryId });
-
-    // Formater le prix sans décimales
     const formatPrice = (price) => parseInt(price).toLocaleString("fr-FR");
 
-    // Variants for staggered animations
     const containerVariants = {
         hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-            },
-        },
+        visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
     };
 
     const itemVariants = {
@@ -30,20 +21,6 @@ export default function Index({ products, categories }) {
         visible: { y: 0, opacity: 1 },
     };
 
-    const filterVariants = {
-        hidden: { opacity: 0, y: -20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                type: 'spring',
-                stiffness: 100,
-                delay: 0.2,
-            },
-        },
-    };
-    
-    // Variantes pour l'animation de la section
     const sectionVariants = {
         hidden: { opacity: 0, y: 50 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
@@ -53,7 +30,7 @@ export default function Index({ products, categories }) {
         <GuestLayout>
             <Head title="Boutique" />
 
-            {/* === Section Bannière (maintenant fusionnée) === */}
+            {/* Bannière */}
             <motion.section
                 className="bg-gradient-to-r from-blue-800 to-indigo-900 text-white py-28 sm:py-36 text-center shadow-xl"
                 initial="hidden"
@@ -79,7 +56,7 @@ export default function Index({ products, categories }) {
             </motion.section>
 
             <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                {/* === Filtres catégories === */}
+                {/* Filtres catégories */}
                 <motion.div
                     className="flex flex-wrap justify-center gap-3 mb-12"
                     initial="hidden"
@@ -92,7 +69,7 @@ export default function Index({ products, categories }) {
                             href={route('shop.index')}
                             className={`px-5 py-2 text-md font-medium rounded-full transition-all flex items-center shadow-sm ${
                                 !currentCategory
-                                    ? 'bg-blue-600 text-white shadow-md'
+                                    ? 'bg-green-600 text-white shadow-md'
                                     : 'bg-white text-gray-700 hover:bg-gray-100'
                             }`}
                         >
@@ -105,7 +82,7 @@ export default function Index({ products, categories }) {
                                 href={getCategoryLink(category.id)}
                                 className={`px-5 py-2 text-md font-medium rounded-full transition-all flex items-center shadow-sm ${
                                     currentCategory == category.id
-                                        ? 'bg-blue-600 text-white shadow-md'
+                                        ? 'bg-green-600 text-white shadow-md'
                                         : 'bg-white text-gray-700 hover:bg-gray-100'
                                 }`}
                             >
@@ -115,7 +92,7 @@ export default function Index({ products, categories }) {
                     ))}
                 </motion.div>
 
-                {/* === Grille des produits === */}
+                {/* Grille des produits */}
                 {products?.data?.length > 0 ? (
                     <motion.div
                         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
@@ -154,14 +131,14 @@ export default function Index({ products, categories }) {
                                     <h3 className="text-base sm:text-lg font-bold text-gray-900 truncate">
                                         {product.name}
                                     </h3>
-                                    <p className="text-xl font-extrabold text-blue-600 mt-2">
+                                    <p className="text-xl font-extrabold text-green-600 mt-2">
                                         {formatPrice(product.price)} FCFA
                                     </p>
 
                                     <div className="mt-4 flex flex-col gap-2">
                                         <Link
                                             href={route('shop.show', product.id)}
-                                            className="block w-full bg-blue-600 text-white py-2 px-4 rounded-full text-sm font-medium shadow hover:bg-blue-700 transition"
+                                            className="block w-full bg-green-600 text-white py-2 px-4 rounded-full text-sm font-medium shadow hover:bg-green-700 transition"
                                         >
                                             Voir détails
                                         </Link>
@@ -176,7 +153,7 @@ export default function Index({ products, categories }) {
                     </div>
                 )}
 
-                {/* === Section WhatsApp CTA === */}
+                {/* Section WhatsApp CTA */}
                 <motion.div
                     className="text-center py-12 px-6 mt-20 bg-gradient-to-r from-green-500 to-green-600 rounded-3xl shadow-xl"
                     initial={{ opacity: 0, y: 50 }}

@@ -1,6 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
+import { FaTrash } from 'react-icons/fa';
+
+// Composant de la modale de confirmation
+const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm mx-4">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 text-center">{title}</h3>
+                <p className="text-sm text-gray-600 mb-6 text-center">{message}</p>
+                <div className="flex justify-end space-x-3">
+                    <button
+                        onClick={onClose}
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
+                    >
+                        Annuler
+                    </button>
+                    <button
+                        onClick={onConfirm}
+                        className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                        Supprimer
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 export default function Edit({ auth, product, categories }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -9,8 +38,14 @@ export default function Edit({ auth, product, categories }) {
         description: product.description,
         price: product.price,
         images: null,
+        images_to_delete: [],
         _method: 'put',
     });
+
+    const [existingImages, setExistingImages] = useState(product.images);
+    const [newImagePreviews, setNewImagePreviews] = useState([]);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [imageToDelete, setImageToDelete] = useState(null);
 
     const submit = (e) => {
         e.preventDefault();
@@ -20,7 +55,29 @@ export default function Edit({ auth, product, categories }) {
     };
 
     const handleImageChange = (e) => {
-        setData('images', e.target.files);
+        const files = Array.from(e.target.files);
+        setData('images', files);
+        
+        const previews = files.map(file => URL.createObjectURL(file));
+        setNewImagePreviews(previews);
+    };
+
+    const openConfirmModal = (imageId) => {
+        setImageToDelete(imageId);
+        setShowConfirmModal(true);
+    };
+
+    const closeConfirmModal = () => {
+        setImageToDelete(null);
+        setShowConfirmModal(false);
+    };
+
+    const handleDeleteImage = () => {
+        if (imageToDelete) {
+            setData('images_to_delete', [...data.images_to_delete, imageToDelete]);
+            setExistingImages(existingImages.filter(img => img.id !== imageToDelete));
+            closeConfirmModal();
+        }
     };
 
     return (
@@ -71,7 +128,7 @@ export default function Edit({ auth, product, categories }) {
                                         name="description"
                                         value={data.description}
                                         onChange={(e) => setData('description', e.target.value)}
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                        className="mt-1 block h-60 w-full rounded-md border-gray-300 shadow-sm"
                                     ></textarea>
                                     {errors.description && <div className="text-red-500 text-sm mt-1">{errors.description}</div>}
                                 </div>
@@ -89,12 +146,30 @@ export default function Edit({ auth, product, categories }) {
                                     />
                                     {errors.price && <div className="text-red-500 text-sm mt-1">{errors.price}</div>}
                                 </div>
-                                {/* Champ Images */}
+                                {/* Images existantes */}
                                 <div className="mb-4">
-                                    <label htmlFor="images" className="block text-sm font-medium text-gray-700">Images du produit</label>
-                                    <div className="flex space-x-2 my-2">
-                                        {product.images.map(image => (
-                                            <img key={image.id} src={`/storage/${image.path}`} alt="" className="h-16 w-16 object-cover rounded" />
+                                    <label className="block text-sm font-medium text-gray-700">Images actuelles</label>
+                                    <div className="flex flex-wrap gap-2 my-2">
+                                        {existingImages.map(image => (
+                                            <div key={image.id} className="relative group">
+                                                <img src={`/storage/${image.path}`} alt="" className="h-24 w-24 object-cover rounded-md" />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => openConfirmModal(image.id)}
+                                                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                >
+                                                    <FaTrash size={12} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                {/* Ajouter de nouvelles images */}
+                                <div className="mb-4">
+                                    <label htmlFor="images" className="block text-sm font-medium text-gray-700">Ajouter de nouvelles images</label>
+                                    <div className="flex flex-wrap gap-2 my-2">
+                                        {newImagePreviews.map((preview, index) => (
+                                            <img key={index} src={preview} alt="Nouvelle image" className="h-24 w-24 object-cover rounded-md" />
                                         ))}
                                     </div>
                                     <input
@@ -115,6 +190,14 @@ export default function Edit({ auth, product, categories }) {
                     </div>
                 </div>
             </div>
+
+            <ConfirmationModal
+                isOpen={showConfirmModal}
+                onClose={closeConfirmModal}
+                onConfirm={handleDeleteImage}
+                title="Confirmer la suppression"
+                message="Êtes-vous sûr de vouloir supprimer cette image ? Cette action est irréversible."
+            />
         </AdminLayout>
     );
 }

@@ -1,20 +1,12 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 // Assurez-vous d'importer votre composant AdminLayout ici.
-// Ce composant doit contenir votre barre de navigation et la structure de base de l'espace admin.
 import AdminLayout from '@/Layouts/AdminLayout'; 
 
 // Données fictives pour le tableau de bord
-const mockStats = [
-    { label: 'Visiteurs Totaux', value: '12 560', icon: '👤' },
-    { label: 'Produits en Stock', value: '450', icon: '📦' },
-    { label: 'Commandes en Attente', value: '35', icon: '🛒' },
-    { label: 'Avis Clients', value: '1 234', icon: '⭐' },
-];
-
 const mockVisitorData = [
     { name: 'Jan', Visiteurs: 400 },
     { name: 'Fév', Visiteurs: 300 },
@@ -41,12 +33,13 @@ const chartVariants = {
     visible: { opacity: 1, scale: 1, transition: { duration: 0.8, delay: 0.2 } }
 };
 
-export default function Dashboard({ stats, admins, recentProducts }) {
+export default function Dashboard({ stats, admins, recentProducts, recentComments }) {
     const realStats = [
         { label: 'Utilisateurs Totaux', value: stats.totalUsers, icon: '👤' },
         { label: 'Produits en Stock', value: stats.totalProducts, icon: '📦' },
         { label: 'Catégories', value: stats.totalCategories, icon: '🏷️' },
         { label: 'Admins', value: stats.totalAdmins, icon: '👑' },
+        { label: 'Total Commentaires', value: stats.totalComments, icon: '💬' },
     ];
 
     return (
@@ -61,7 +54,7 @@ export default function Dashboard({ stats, admins, recentProducts }) {
                 <p className="text-lg text-gray-600 mb-8">Statistiques et aperçu de votre site.</p>
 
                 {/* Section des cartes de statistiques */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
                     {realStats.map((stat, index) => (
                         <motion.div
                             key={index}
@@ -79,9 +72,9 @@ export default function Dashboard({ stats, admins, recentProducts }) {
                         </motion.div>
                     ))}
                 </div>
-
-                {/* Section des graphiques */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                {/* Section des graphiques et des widgets */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
                     {/* Graphique des visiteurs mensuels */}
                     <motion.div
                         className="bg-white rounded-xl shadow-lg p-6"
@@ -100,13 +93,42 @@ export default function Dashboard({ stats, admins, recentProducts }) {
                         </ResponsiveContainer>
                     </motion.div>
 
-                    {/* Ajoutez d'autres widgets ou graphiques ici */}
+                    {/* Widget des derniers commentaires */}
                     <motion.div
                         className="bg-white rounded-xl shadow-lg p-6"
                         variants={chartVariants}
                         initial="hidden"
                         animate="visible"
                         transition={{ delay: 0.4 }}
+                    >
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-bold text-gray-800">Derniers Commentaires</h2>
+                            <Link href={route('admin.comments.index')} className="text-sm text-blue-600 hover:underline">
+                                Voir tout &rarr;
+                            </Link>
+                        </div>
+                        <ul className="space-y-4 text-gray-700">
+                            {recentComments.length > 0 ? (
+                                recentComments.map(comment => (
+                                    <li key={comment.id} className="border-b border-gray-200 pb-2 last:border-b-0 last:pb-0">
+                                        <div className="font-semibold text-gray-900">{comment.name}</div>
+                                        <div className="text-sm text-gray-500 truncate">{comment.comment}</div>
+                                        <div className="text-xs text-gray-400 mt-1">sur {comment.product.name}</div>
+                                    </li>
+                                ))
+                            ) : (
+                                <p className="text-gray-500 italic text-sm">Aucun commentaire récent.</p>
+                            )}
+                        </ul>
+                    </motion.div>
+
+                    {/* Ajoutez d'autres widgets ou graphiques ici */}
+                    <motion.div
+                        className="bg-white rounded-xl shadow-lg p-6"
+                        variants={chartVariants}
+                        initial="hidden"
+                        animate="visible"
+                        transition={{ delay: 0.6 }}
                     >
                         <h2 className="text-xl font-bold text-gray-800 mb-4">Activité Récente</h2>
                         <ul className="space-y-4 text-gray-700">

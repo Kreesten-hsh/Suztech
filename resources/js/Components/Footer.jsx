@@ -1,79 +1,57 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
-import { FaFacebook, FaTwitter, FaInstagram, FaWhatsapp } from 'react-icons/fa';
+import { BsTwitterX } from 'react-icons/bs';
+import { FaFacebook, FaInstagram, FaWhatsapp, FaYoutube} from 'react-icons/fa'; // Import de FaXTwitter
 
 export default function Footer() {
     return (
-        <footer className="bg-gray-800 text-gray-300 py-16 px-6 lg:px-20">
-            <div className="container mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-center md:text-left">
-                    {/* Colonne 1 : Logo et Description */}
-                    <div>
-                        <Link href="/" className="flex items-center justify-center md:justify-start space-x-2">
-                            <h2 className="text-3xl font-bold text-white">Suztech</h2>
+        <footer className="bg-gray-900 text-gray-400 py-8 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
+                {/* Section supérieure : Logo, liens de navigation, et réseaux sociaux */}
+                <div className="flex flex-col items-center justify-between text-center md:flex-row md:text-left">
+                    <div className="mb-6 md:mb-0">
+                        <Link href="/">
+                            <h2 className="text-3xl font-bold text-white">SUZTECH</h2>
                         </Link>
-                        <p className="mt-4 text-sm text-gray-400">
-                            Votre partenaire de confiance pour des solutions technologiques et administratives fiables et rapides.
-                        </p>
-                        <div className="flex justify-center md:justify-start space-x-4 mt-6">
-                            <a href="https://facebook.com" target="_blank" className="text-gray-400 hover:text-white transition-colors">
-                                <FaFacebook className="text-4xl" />
-                            </a>
-                            <a href="https://twitter.com" target="_blank" className="text-gray-400 hover:text-white transition-colors">
-                                <FaTwitter className="text-4xl" />
-                            </a>
-                            <a href="https://instagram.com" target="_blank" className="text-gray-400 hover:text-white transition-colors">
-                                <FaInstagram className="text-4xl" />
-                            </a>
-                            <a href="https://wa.me/2290161012941" target="_blank" className="text-gray-400 hover:text-white transition-colors">
-                                <FaWhatsapp className="text-4xl" />
-                            </a>
-                        </div>
                     </div>
 
-                    {/* Colonne 2 : Navigation */}
-                    <div>
-                        <h3 className="text-xl font-semibold text-white mb-4">Navigation</h3>
-                        <ul className="space-y-3">
-                            <li><Link href="/" className="hover:text-white transition-colors">Accueil</Link></li>
-                            <li><Link href="/services" className="hover:text-white transition-colors">Services</Link></li>
-                            <li><Link href="/boutique" className="hover:text-white transition-colors">Boutique</Link></li>
-                            <li><Link href="/about" className="hover:text-white transition-colors">À propos</Link></li>
-                            <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-                        </ul>
-                    </div>
+                    <nav className="flex flex-wrap justify-center md:justify-start space-x-6 lg:space-x-8 mb-6 md:mb-0">
+                        <Link href={route('home')} className="hover:text-white transition-colors text-sm md:text-base">Accueil</Link>
+                        <Link href={route('about')} className="hover:text-white transition-colors text-sm md:text-base">À propos</Link>
+                        <Link href={route('shop.index')} className="hover:text-white transition-colors text-sm md:text-base">Boutique</Link>
+                        <Link href={route('contact')} className="hover:text-white transition-colors text-sm md:text-base">Contact</Link>
+                    </nav>
 
-                    {/* Colonne 3 : Services */}
-                    <div>
-                        <h3 className="text-xl font-semibold text-white mb-4">Nos Services</h3>
-                        <ul className="space-y-3">
-                            <li><Link href="/services#consulting" className="hover:text-white transition-colors">Consultant IT</Link></li>
-                            <li><Link href="/services#reparation" className="hover:text-white transition-colors">Réparation</Link></li>
-                            <li><Link href="/services#logos" className="hover:text-white transition-colors">Création de Logos</Link></li>
-                            <li><Link href="/services#formalites" className="hover:text-white transition-colors">Formalités administratives</Link></li>
-                            <li><Link href="/services#paiement" className="hover:text-white transition-colors">Paiement de factures</Link></li>
-                        </ul>
-                    </div>
-                    
-                    {/* Colonne 4 : Informations de contact */}
-                    <div>
-                        <h3 className="text-xl font-semibold text-white mb-4">Contact</h3>
-                        <ul className="space-y-3">
-                            <li>
-                                <a href="tel:+2290161012941" className="hover:text-white transition-colors">Tél: 01 61 01 29 41</a>
-                            </li>
-                            <li>
-                                <a href="mailto:contact@suztech.com" className="hover:text-white transition-colors">Email: contact@suztech.com</a>
-                            </li>
-                            <li>
-                                <span>Adresse: (Ajoutez votre adresse)</span>
-                            </li>
-                        </ul>
+                    <div className="flex space-x-4">
+                        <a href="https://www.facebook.com/profile.php?id=100086739134224" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                            <FaFacebook className="text-3xl" />
+                        </a>
+                        <a href="https://x.com/SUZTECH2?t=hh-GpztTL6dZBrQmsJbIWw&s=08" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                            <BsTwitterX className="text-3xl" />
+                        </a>
+                        <a href="https://www.instagram.com/suztech2?igsh=MTVvOXMwb3RlaHp2dw==" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                            <FaInstagram className="text-3xl" />
+                        </a>
+                        <a href="https://wa.me/2290161012941" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                            <FaWhatsapp className="text-3xl" />
+                        </a>
+                        <a href="https://youtube.com/@suztech?si=fg27sf30vr66OXrX" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                            <FaYoutube className="text-3xl" />
+                        </a>
                     </div>
                 </div>
 
-                <div className="border-t border-gray-700 mt-12 pt-6 text-center text-gray-500 text-md">
-                    <p>&copy; {new Date().getFullYear()} Suztech. Tous droits réservés.</p>
+                {/* Séparateur */}
+                <hr className="my-6 border-gray-700" />
+
+                {/* Section inférieure : Droits d'auteur et informations de contact */}
+                <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left text-sm text-gray-500">
+                    <p className="mb-2 md:mb-0">© {new Date().getFullYear()} SUZTECH. Tous droits réservés.</p>
+                    <div className="space-x-4">
+                        <span className="inline-block">Tél: 01 61 01 29 41</span>
+                        <span className="inline-block">Email: Suztech7@gmail.com</span>
+                        <span className="inline-block">Adresse: Tokpota, Poto-Novo, Bénin</span>
+                    </div>
                 </div>
             </div>
         </footer>

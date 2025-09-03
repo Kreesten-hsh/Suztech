@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { usePage, Link } from '@inertiajs/react';
-import { FaTachometerAlt, FaCube, FaTags } from 'react-icons/fa';
+import { FaTachometerAlt, FaCube, FaTags, FaCommentAlt } from 'react-icons/fa';
 
 export default function AdminLayout({ user, header, children }) {
     const { url } = usePage();
@@ -16,7 +16,7 @@ export default function AdminLayout({ user, header, children }) {
 
             {/* Barre latérale (Sidebar) */}
             <aside
-                className={`fixed top-0 inset-y-0 left-0 w-64 bg-gray-800 text-white flex-shrink-0 transform transition-transform duration-300 ease-in-out z-30 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}
+                className={`fixed top-0 inset-y-0 left-0 w-64 bg-gray-800 text-white flex-shrink-0 transform transition-transform duration-300 ease-in-out z-30 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:fixed md:translate-x-0`}
             >
                 <div className="flex justify-between items-center p-6 text-2xl font-bold border-b border-gray-700">
                     <span>Admin</span>
@@ -32,7 +32,7 @@ export default function AdminLayout({ user, header, children }) {
                 </div>
                 <nav className="p-4">
                     <ul className="space-y-2">
-                         {/* Lien vers le Tableau de Bord */}
+                        {/* Lien vers le Tableau de Bord */}
                         <li>
                             <Link href={route('admin.dashboard')}
                                 className={`flex items-center space-x-2 py-2 px-4 rounded-lg transition duration-200 ease-in-out ${url.startsWith('/admin/dashboard') ? 'bg-blue-600 text-white' : 'hover:bg-gray-700'}`}
@@ -41,6 +41,7 @@ export default function AdminLayout({ user, header, children }) {
                                 <span>Tableau de Bord</span>
                             </Link>
                         </li>
+                        {/* Lien vers la gestion des produits */}
                         <li>
                             <Link href={route('admin.products.index')}
                                 className={`flex items-center space-x-2 py-2 px-4 rounded-lg transition duration-200 ease-in-out ${url.startsWith('/admin/products') ? 'bg-blue-600 text-white' : 'hover:bg-gray-700'}`}
@@ -49,12 +50,22 @@ export default function AdminLayout({ user, header, children }) {
                                 <span>Produits</span>
                             </Link>
                         </li>
+                        {/* Lien vers la gestion des catégories */}
                         <li>
                             <Link href={route('admin.categories.index')}
                                 className={`flex items-center space-x-2 py-2 px-4 rounded-lg transition duration-200 ease-in-out ${url.startsWith('/admin/categories') ? 'bg-blue-600 text-white' : 'hover:bg-gray-700'}`}
                             >
                                 <FaTags className="w-5 h-5" />
                                 <span>Catégories</span>
+                            </Link>
+                        </li>
+                        {/* Nouveau lien vers la gestion des commentaires */}
+                        <li>
+                            <Link href={route('admin.comments.index')}
+                                className={`flex items-center space-x-2 py-2 px-4 rounded-lg transition duration-200 ease-in-out ${url.startsWith('/admin/comments') ? 'bg-blue-600 text-white' : 'hover:bg-gray-700'}`}
+                            >
+                                <FaCommentAlt className="w-5 h-5" />
+                                <span>Commentaires</span>
                             </Link>
                         </li>
                     </ul>
@@ -67,7 +78,7 @@ export default function AdminLayout({ user, header, children }) {
             </aside>
 
             {/* Contenu principal */}
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col md:ml-64">
                 <header className="bg-white shadow">
                     <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
                         {/* Bouton du menu hamburger (visible sur mobile) */}
