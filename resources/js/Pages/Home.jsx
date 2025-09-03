@@ -7,14 +7,13 @@ import { motion } from 'framer-motion';
 export default function Home({ latestProducts }) {
     // Array of image URLs for the banner slideshow
     const bannerImages = [
-        'https://images.unsplash.com/photo-1516321497-2b73f8a0e8d3?q=80&w=2940&auto=format&fit=crop',
         'https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2940&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1579782522770-985e5109b8d0?q=80&w=2940&auto=format&fit=crop',
         'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2940&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1504384308051-57425110d73a?q=80&w=2940&auto=format&fit=crop',
+        '/images/bannière.jpg',
     ];
 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isFirstImageLoaded, setIsFirstImageLoaded] = useState(false); // New state to track if the first image is loaded
 
     // Use effect to handle automatic image change
     useEffect(() => {
@@ -25,6 +24,11 @@ export default function Home({ latestProducts }) {
         // Cleanup the interval when the component unmounts
         return () => clearInterval(intervalId);
     }, [bannerImages.length]);
+
+    // Function to handle the first image load
+    const handleFirstImageLoad = () => {
+        setIsFirstImageLoaded(true);
+    };
 
     // Variants for animations
     const containerVariants = {
@@ -47,10 +51,13 @@ export default function Home({ latestProducts }) {
 
     return (
         <GuestLayout>
-            <Head title="Accueil" />
+            <Head title="Accueil">
+                {/* Preload the first banner image to ensure it loads instantly */}
+                <link rel="preload" href={bannerImages[0]} as="image" />
+            </Head>
 
             {/* Main banner with fluid image slideshow */}
-            <section className="relative w-full h-96 lg:h-[700px] overflow-hidden">
+            <section className="relative w-full h-96 lg:h-[700px] overflow-hidden bg-gray-200">
                 {bannerImages.map((image, index) => (
                     <motion.div
                         key={index}
@@ -63,6 +70,8 @@ export default function Home({ latestProducts }) {
                             src={image}
                             alt={`Slide ${index + 1}`}
                             className="w-full h-full object-cover"
+                            // Use onLoad on the first image to track its loading status
+                            onLoad={index === 0 ? handleFirstImageLoad : null}
                             onError={(e) => {
                                 e.target.onerror = null;
                                 e.target.src = "https://placehold.co/1920x1080/E0F7FA/000?text=Image+indisponible";
@@ -71,46 +80,48 @@ export default function Home({ latestProducts }) {
                     </motion.div>
                 ))}
                 
-                {/* Overlay with text and buttons */}
-                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-start justify-center p-4 pt-16 lg:pt-36">
-                    <div className="text-center text-white">
-                        <motion.h1 
-                            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4"
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 1 }}
-                        >
-                            Fiable & Rapide
-                        </motion.h1>
-                        <motion.p
-                            className="text-lg sm:text-xl lg:text-2xl font-light mb-8"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.5, duration: 1 }}
-                        >
-                            Technologie et Innovation, votre partenaire de confiance.
-                        </motion.p>
-                        <motion.div
-                            className="flex flex-col sm:flex-row justify-center items-center gap-4"
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 1, duration: 0.5 }}
-                        >
-                            <Link 
-                                href="/services" 
-                                className="bg-cyan-600 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-cyan-700 transition-colors duration-300"
+                {/* Overlay with text and buttons, rendered only after the first image is loaded */}
+                {isFirstImageLoaded && (
+                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-start justify-center p-4 pt-16 lg:pt-40">
+                        <div className="text-center text-white">
+                            <motion.h1 
+                                className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4"
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 1 }}
                             >
-                                Nos Services
-                            </Link>
-                            <Link 
-                                href="/contact" 
-                                className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-white hover:text-slate-900 transition-colors duration-300"
+                                Fiable & Rapide
+                            </motion.h1>
+                            <motion.p
+                                className="text-lg sm:text-xl lg:text-2xl font-light mb-8"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.5, duration: 1 }}
                             >
-                                Contactez-nous
-                            </Link>
-                        </motion.div>
+                                Technologie et Innovation, votre partenaire de confiance.
+                            </motion.p>
+                            <motion.div
+                                className="flex flex-col sm:flex-row justify-center items-center gap-4"
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 1, duration: 0.5 }}
+                            >
+                                <Link 
+                                    href="/services" 
+                                    className="bg-cyan-600 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-cyan-700 transition-colors duration-300"
+                                >
+                                    Nos Services
+                                </Link>
+                                <Link 
+                                    href="/contact" 
+                                    className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-white hover:text-slate-900 transition-colors duration-300"
+                                >
+                                    Contactez-nous
+                                </Link>
+                            </motion.div>
+                        </div>
                     </div>
-                </div>
+                )}
             </section>
             
             {/* Présentation de l'entreprise */}
@@ -270,7 +281,7 @@ export default function Home({ latestProducts }) {
 
             {/* Section Appel à l'action */}
             <motion.section
-                className="bg-cyan-600 text-white card py-12 text-center mb-44"
+                className="bg-cyan-600 text-white card py-12 text-center mb-28"
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}

@@ -43,7 +43,7 @@ const ImageModal = ({ isOpen, onClose, images, initialIndex = 0 }) => {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.3 }}
-                        className="w-full h-full object-contain rounded-lg"
+                        className="w-full object-contain rounded-lg"
                         alt={`Image ${currentIndex + 1}`}
                     />
                 </AnimatePresence>
@@ -320,7 +320,7 @@ export default function Show({ product, similarProducts, comments }) {
                             variants={sectionVariants}
                         >
                             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 text-center">Vous aimerez aussi</h2>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {similarProducts.map(similar => (
                                     <motion.div
                                         key={similar.id}
@@ -341,7 +341,6 @@ export default function Show({ product, similarProducts, comments }) {
                                             </div>
                                             <div className="p-4 text-center">
                                                 <h3 className="text-lg font-semibold text-gray-900 truncate">{similar.name}</h3>
-                                                <p className="text-sm text-gray-500">{similar.category?.name || 'Sans catégorie'}</p>
                                                 <p className="text-xl font-bold text-blue-600 mt-2">{similar.price} FCFA</p>
                                             </div>
                                         </Link>
