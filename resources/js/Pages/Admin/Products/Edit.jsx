@@ -83,7 +83,7 @@ export default function Edit({ auth, product, categories }) {
     return (
         <AdminLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Modifier un produit</h2>}
+            header="Modifier un produit"
         >
             <Head title="Modifier un produit" />
             <div className="py-12">
@@ -114,9 +114,11 @@ export default function Edit({ auth, product, categories }) {
                                         onChange={(e) => setData('category_id', e.target.value)}
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
                                     >
-                                        {categories.map(category => (
-                                            <option key={category.id} value={category.id}>{category.name}</option>
-                                        ))}
+                                    {categories && categories.length > 0 ? categories.map(category => (
+                                        <option key={category.id} value={category.id}>{category.name}</option>
+                                    )) : (
+                                        <option disabled>Aucune catégorie disponible</option>
+                                    )}
                                     </select>
                                     {errors.category_id && <div className="text-red-500 text-sm mt-1">{errors.category_id}</div>}
                                 </div>
@@ -150,9 +152,9 @@ export default function Edit({ auth, product, categories }) {
                                 <div className="mb-4">
                                     <label className="block text-sm font-medium text-gray-700">Images actuelles</label>
                                     <div className="flex flex-wrap gap-2 my-2">
-                                        {existingImages.map(image => (
+                                        {existingImages && existingImages.length > 0 ? existingImages.map(image => (
                                             <div key={image.id} className="relative group">
-                                                <img src={`/storage/${image.path}`} alt="" className="h-24 w-24 object-cover rounded-md" />
+                                                <img src={image.url} alt="" className="h-24 w-24 object-cover rounded-md" />
                                                 <button
                                                     type="button"
                                                     onClick={() => openConfirmModal(image.id)}
@@ -161,7 +163,9 @@ export default function Edit({ auth, product, categories }) {
                                                     <FaTrash size={12} />
                                                 </button>
                                             </div>
-                                        ))}
+                                        )) : (
+                                            <p className="text-gray-500 text-sm">Aucune image disponible</p>
+                                        )}
                                     </div>
                                 </div>
                                 {/* Ajouter de nouvelles images */}

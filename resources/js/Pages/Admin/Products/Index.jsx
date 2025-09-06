@@ -97,7 +97,7 @@ export default function Index({ auth, products }) {
                                                         product.images.map((image, index) => (
                                                             <img
                                                                 key={index}
-                                                                src={`/storage/${image.path}`}
+                                                                src={image.url}
                                                                 alt={`${product.name} image ${index + 1}`}
                                                                 className="h-12 w-12 object-cover rounded-md"
                                                             />
@@ -140,7 +140,7 @@ export default function Index({ auth, products }) {
                                                 product.images.map((image, index) => (
                                                     <img
                                                         key={index}
-                                                        src={`/storage/${image.path}`}
+                                                        src={image.url}
                                                         alt={`${product.name} image ${index + 1}`}
                                                         className="h-16 w-16 object-cover rounded-md shadow-sm"
                                                     />

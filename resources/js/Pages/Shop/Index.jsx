@@ -112,11 +112,11 @@ export default function Index({ products, categories }) {
                                 {/* Image produit */}
                                 <div className="relative overflow-hidden">
                                     {product.images?.length > 0 ? (
-                                        <img
-                                            src={product.images[0].url}
-                                            alt={product.name}
-                                            className="w-full h-48 object-cover duration-100"
-                                        />
+                                            <img
+                                                src={product.images[0].url}
+                                                alt={product.name}
+                                                className="w-full h-48 object-cover duration-100"
+                                            />
                                     ) : (
                                         <img
                                             src="https://via.placeholder.com/400x300.png?text=Image+non+disponible"

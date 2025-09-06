@@ -71,7 +71,7 @@ const ImageModal = ({ isOpen, onClose, images, initialIndex = 0 }) => {
 
 export default function Show({ product, similarProducts, comments }) {
     const defaultImage = "https://via.placeholder.com/600x400.png?text=Image+non+disponible";
-    const [mainImage, setMainImage] = useState(product.images?.length > 0 ? `/storage/${product.images[0].path}` : defaultImage);
+    const [mainImage, setMainImage] = useState(product.images?.length > 0 ? product.images[0].url : defaultImage);
     const [showForm, setShowForm] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -82,8 +82,8 @@ export default function Show({ product, similarProducts, comments }) {
         product_id: product.id,
     });
 
-    const handleThumbnailClick = (imagePath) => {
-        setMainImage(`/storage/${imagePath}`);
+    const handleThumbnailClick = (imageUrl) => {
+        setMainImage(imageUrl);
     };
 
     const handleImageClick = (index) => {
@@ -148,7 +148,7 @@ export default function Show({ product, similarProducts, comments }) {
                         <div>
                             <div 
                                 className="relative w-full h-[450px] bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer"
-                                onClick={() => handleImageClick(product.images.findIndex(img => `/storage/${img.path}` === mainImage))}
+                                onClick={() => handleImageClick(product.images.findIndex(img => img.url === mainImage))}
                             >
                                 <AnimatePresence mode="wait">
                                     <motion.img
@@ -178,10 +178,10 @@ export default function Show({ product, similarProducts, comments }) {
                                     {product.images.map((img, index) => (
                                         <motion.img
                                             key={index}
-                                            src={`/storage/${img.path}`}
+                                            src={img.url}
                                             alt={product.name}
-                                            className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 ${mainImage === `/storage/${img.path}` ? 'border-blue-600' : 'border-transparent'} transition`}
-                                            onClick={() => handleThumbnailClick(img.path)}
+                                            className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 ${mainImage === img.url ? 'border-blue-600' : 'border-transparent'} transition`}
+                                            onClick={() => handleThumbnailClick(img.url)}
                                             variants={cardVariants}
                                             whileHover={{ scale: 1.1 }}
                                             whileTap={{ scale: 0.9 }}
