@@ -8,7 +8,8 @@ use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage; // Importation ajoutée pour la suppression de fichiers
+use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\ProductResource;
 
 class ProductController extends Controller
 {
@@ -21,7 +22,7 @@ class ProductController extends Controller
     {
         $products = Product::with('category', 'images')->latest()->paginate(10);
         return Inertia::render('Admin/Products/Index', [
-            'products' => $products
+            'products' => ProductResource::collection($products) // Utiliser la ressource ici
         ]);
     }
 
@@ -74,7 +75,7 @@ class ProductController extends Controller
         $categories = Category::all();
         $product->load('images');
         return Inertia::render('Admin/Products/Edit', [
-            'product' => $product,
+            'product' => new ProductResource($product), // Utiliser la ressource ici
             'categories' => $categories
         ]);
     }
