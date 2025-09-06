@@ -26,9 +26,11 @@ COPY . /var/www/html
 WORKDIR /var/www/html
 
 # Installe les dépendances PHP et Node.js
+# Exécute la compilation du frontend et crée le lien symbolique de stockage
 RUN composer install --no-dev --optimize-autoloader \
     && npm install \
-    && npm run build
+    && npm run build \
+    && php artisan storage:link
 
 # Copie le fichier de configuration Nginx
 COPY .docker/nginx/default.conf /etc/nginx/nginx.conf
