@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaWhatsapp, FaHome, FaStore, FaEnvelope, FaCog, FaIdCard } from 'react-icons/fa';
 
-export default function Sidebar({ isOpen, onClose }) {
+const Sidebar = memo(function Sidebar({ isOpen, onClose }) {
     const { url } = usePage();
+
+    const handleClose = useCallback(() => {
+        onClose();
+    }, [onClose]);
 
     const links = [
         { href: '/', label: 'Accueil', icon: <FaHome /> },
@@ -16,46 +20,18 @@ export default function Sidebar({ isOpen, onClose }) {
 
     // Variants for the sidebar and its content
     const sidebarVariants = {
-        open: { 
+        open: {
             x: 0,
-            transition: { duration: 0.3 } // Reduced animation time
+            transition: {
+                duration: 0.3,
+                ease: "easeOut"
+            }
         },
-        closed: { 
+        closed: {
             x: '100%',
-            transition: { duration: 0.3 } // Reduced animation time
-        }
-    };
-
-    // Variants for the staggered list items
-    const listVariants = {
-        open: {
             transition: {
-                staggerChildren: 0.05, // Reduced stagger time
-                delayChildren: 0.1 // Reduced delay
-            }
-        },
-        closed: {
-            transition: {
-                staggerChildren: 0.05,
-                staggerDirection: -1
-            }
-        }
-    };
-
-    // Variants for each link item
-    const itemVariants = {
-        open: {
-            y: 0,
-            opacity: 1,
-            transition: {
-                y: { stiffness: 1000, velocity: -100 }
-            }
-        },
-        closed: {
-            y: 50,
-            opacity: 0,
-            transition: {
-                y: { stiffness: 1000 }
+                duration: 0.3,
+                ease: "easeIn"
             }
         }
     };
@@ -70,8 +46,9 @@ export default function Sidebar({ isOpen, onClose }) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        onClick={onClose}
+                        transition={{ duration: 0.2 }}
+                        onClick={handleClose}
+                        style={{ willChange: 'opacity' }}
                     ></motion.div>
 
                     {/* Sidebar */}
@@ -81,15 +58,16 @@ export default function Sidebar({ isOpen, onClose }) {
                         animate="open"
                         exit="closed"
                         variants={sidebarVariants}
+                        style={{ willChange: 'transform' }}
                     >
                         {/* Bouton de fermeture */}
                         <div className="flex justify-end p-4">
                             <motion.button
-                                onClick={onClose}
+                                onClick={handleClose}
                                 className="text-white text-5xl"
                                 whileHover={{ rotate: 90 }}
                                 whileTap={{ scale: 0.9 }}
-                                transition={{ duration: 0.3 }}
+                                transition={{ duration: 0.2 }}
                             >
                                 &times;
                             </motion.button>
@@ -97,15 +75,12 @@ export default function Sidebar({ isOpen, onClose }) {
 
                         {/* Navigation */}
                         <nav className="flex-1 px-6">
-                            <motion.ul
-                                className="flex flex-col text-2xl font-semibold text-white gap-3"
-                                variants={listVariants}
-                            >
+                            <ul className="flex flex-col text-2xl font-semibold text-white gap-3">
                                 {links.map(({ href, label, icon }) => (
-                                    <motion.li key={href} variants={itemVariants}>
+                                    <li key={href}>
                                         <Link
                                             href={href}
-                                            onClick={onClose}
+                                            onClick={handleClose}
                                             className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                                                 url === href
                                                     ? 'bg-[#00c651] text-white shadow-lg'
@@ -115,9 +90,9 @@ export default function Sidebar({ isOpen, onClose }) {
                                             <span className="text-xl">{icon}</span>
                                             {label}
                                         </Link>
-                                    </motion.li>
+                                    </li>
                                 ))}
-                            </motion.ul>
+                            </ul>
                         </nav>
 
                         {/* WhatsApp CTA */}
@@ -140,4 +115,6 @@ export default function Sidebar({ isOpen, onClose }) {
             )}
         </AnimatePresence>
     );
-}
+});
+
+export default Sidebar;
