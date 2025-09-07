@@ -30,15 +30,22 @@ export default function Header() {
             animate="visible"
         >
             <div className="container mx-auto flex justify-between items-center p-4">
-                {/* Logo */}
+                {/* Élément de remplissage pour le logo avec une hauteur augmentée pour correspondre au logo */}
+                <div className="w-40"></div> 
+
+                {/* Le logo en position absolue (flottant) ajusté pour être plus haut */}
                 <motion.div
-                    className="text-2xl font-bold text-gray-800"
+                    className="absolute left-4 -translate-y-1 z-10"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                 >
-                    <Link href="/">
-                        SUZTECH
-                    </Link>
+                    <a href="/">
+                        <img
+                            src="/images/logo.png"
+                            alt="SUZTECH Logo"
+                            className="h-32 w-auto lg:h-40"
+                        />
+                    </a>
                 </motion.div>
 
                 {/* Navigation pour les grands écrans (lg) */}
@@ -46,35 +53,35 @@ export default function Header() {
                     <ul className="flex gap-8 font-semibold text-gray-600">
                         <li>
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link href="/" className={`${url === '/' ? 'text-blue-600' : 'hover:text-gray-800 transition-colors'}`}>
+                                <Link href="/" className={`${url === '/' ? 'text-[#00c651]' : 'hover:text-gray-800 transition-colors'}`}>
                                     Accueil
                                 </Link>
                             </motion.div>
                         </li>
                         <li>
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link href="/services" className={`${url.startsWith('/services') ? 'text-blue-600' : 'hover:text-gray-800 transition-colors'}`}>
+                                <Link href="/services" className={`${url.startsWith('/services') ? 'text-[#00c651]' : 'hover:text-gray-800 transition-colors'}`}>
                                     Services
                                 </Link>
                             </motion.div>
                         </li>
                         <li>
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link href="/shop" className={`${url.startsWith('/shop') ? 'text-blue-600' : 'hover:text-gray-800 transition-colors'}`}>
+                                <Link href="/shop" className={`${url.startsWith('/shop') ? 'text-[#00c651]' : 'hover:text-gray-800 transition-colors'}`}>
                                     Boutique
                                 </Link>
                             </motion.div>
                         </li>
                         <li>
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link href="/about" className={`${url.startsWith('/about') ? 'text-blue-600' : 'hover:text-gray-800 transition-colors'}`}>
+                                <Link href="/about" className={`${url.startsWith('/about') ? 'text-[#00c651]' : 'hover:text-gray-800 transition-colors'}`}>
                                     À propos
                                 </Link>
                             </motion.div>
                         </li>
                         <li>
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link href="/contact" className={`${url.startsWith('/contact') ? 'text-blue-600' : 'hover:text-gray-800 transition-colors'}`}>
+                                <Link href="/contact" className={`${url.startsWith('/contact') ? 'text-[#00c651]' : 'hover:text-gray-800 transition-colors'}`}>
                                     Contact
                                 </Link>
                             </motion.div>

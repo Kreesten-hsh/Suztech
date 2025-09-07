@@ -47,7 +47,7 @@ export default function Contact() {
                         >
                             <h2 className="text-2xl font-semibold mb-6 text-black">Envoyez-nous un message</h2>
                             <form 
-                                action="https://formspree.io/f/xvgbbelz" 
+                                action="https://formspree.io/f/xeolvzbr" 
                                 method="POST"
                                 className="space-y-4"
                             >

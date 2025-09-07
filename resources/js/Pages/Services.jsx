@@ -1,14 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { 
     FaLaptopCode, FaTools, FaPencilRuler, FaIdCard, FaFileInvoice, 
     FaNetworkWired, FaCog, FaPaintBrush, FaCreditCard, 
-    FaUserTie, FaPassport, FaTv, FaFileSignature 
+    FaUserTie, FaPassport, FaTv, FaFileSignature, FaUserCog, 
+    FaSearchDollar, FaShieldAlt, FaReceipt, FaFileAlt, FaPlug,
+    FaMoneyBillWave, FaGlobe
 } from 'react-icons/fa';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Services(props) {
+
+    const bannerImages = [
+        '/images/IMG-20250906-WA0012.jpg',
+        '/images/IMG-20250906-WA0013.jpg',
+        '/images/IMG-20250906-WA0014.jpg',
+        '/images/IMG-20250906-WA0015.jpg',
+        '/images/IMG-20250906-WA0016.jpg',
+    ];
+
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentImageIndex((prevIndex) => 
+                (prevIndex + 1) % bannerImages.length
+            );
+        }, 5000); // Change l'image toutes les 5 secondes (5000 ms)
+
+        return () => clearInterval(interval); // Nettoyage de l'intervalle lors du démontage du composant
+    }, [bannerImages.length]);
+
     // Variants pour les sections
     const sectionVariants = {
         hidden: { opacity: 0, y: 50 },
@@ -30,24 +53,46 @@ export default function Services(props) {
         },
     };
 
+    // Style commun pour les conteneurs d'icônes
+    const iconContainerClass = "h-14 w-14 flex items-center justify-center mx-auto mb-4";
+
     return (
         <GuestLayout>
             <Head title="Services" />
 
             {/* Bannière de la page Services */}
-            <motion.section 
-                className="bg-gray-950 text-white py-24 sm:py-32 text-center"
-                initial={{ opacity: 0, y: -50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
+            <section 
+                className="relative bg-gray-950 text-white py-24 sm:py-48 text-center overflow-hidden"
             >
-                <div className="container mx-auto px-4">
+                {/* Carrousel d'images de fond */}
+                <AnimatePresence initial={false}>
+                    <motion.div
+                        key={currentImageIndex}
+                        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+                        style={{ backgroundImage: `url(${bannerImages[currentImageIndex]})` }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 1.5, ease: "easeInOut" }}
+                    />
+                </AnimatePresence>
+
+                {/* Overlay pour assombrir l'image et améliorer la lisibilité du texte */}
+                <div className="absolute inset-0 z-10 bg-black opacity-60"></div>
+
+                {/* Contenu de la bannière (texte) */}
+                <motion.div 
+                    className="container mx-auto px-4 relative z-20"
+                    initial={{ opacity: 0, y: -50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.5 }}
+                >
                     <h1 className="text-4xl sm:text-5xl font-extrabold">Nos services et prestations</h1>
                     <p className="mt-10 text-lg sm:text-xl lg:text-2xl font-light">
                         <span className="font-bold">SUZTECH</span> vous accompagne avec des solutions complètes en informatique, design et services administratifs pour particuliers et entreprises.
                     </p>
-                </div>
-            </motion.section>
+                </motion.div>
+            </section>
 
             {/* Section des solutions IT */}
             <motion.section 
@@ -64,7 +109,9 @@ export default function Services(props) {
                     </motion.h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                         <motion.div variants={cardVariants} className="flex flex-col md:flex-row items-center p-6 bg-gray-50 rounded-lg shadow-md">
-                            <FaNetworkWired className="text-5xl text-[#00c651]" />
+                            <div>
+                                <FaUserCog className="text-3xl text-[#00c651]" />
+                            </div>
                             <div className="md:ml-6">
                                 <h3 className="text-xl font-bold text-black">Consultant en informatique</h3>
                                 <p className="text-gray-700 mt-2 leading-relaxed">
@@ -74,7 +121,9 @@ export default function Services(props) {
                         </motion.div>
 
                         <motion.div variants={cardVariants} className="flex flex-col md:flex-row items-center p-6 bg-gray-50 rounded-lg shadow-md">
-                            <FaLaptopCode className="text-5xl text-[#00c651]" />
+                            <div>
+                                <FaLaptopCode className="text-3xl text-[#00c651]" />
+                            </div>
                             <div className="md:ml-6">
                                 <h3 className="text-xl font-bold text-black">Solution en IT</h3>
                                 <p className="text-gray-700 mt-2 leading-relaxed">
@@ -84,7 +133,9 @@ export default function Services(props) {
                         </motion.div>
 
                         <motion.div variants={cardVariants} className="flex flex-col md:flex-row items-center p-6 bg-gray-50 rounded-lg shadow-md">
-                            <FaCog className="text-5xl text-[#00c651]" />
+                            <div>
+                                <FaShieldAlt className="text-3xl text-[#00c651]" />
+                            </div>
                             <div className="md:ml-6">
                                 <h3 className="text-xl font-bold text-black">Suivi et entretien</h3>
                                 <p className="text-gray-700 mt-2 leading-relaxed">
@@ -94,7 +145,9 @@ export default function Services(props) {
                         </motion.div>
 
                         <motion.div variants={cardVariants} className="flex flex-col md:flex-row items-center p-6 bg-gray-50 rounded-lg shadow-md">
-                            <FaTools className="text-5xl text-[#00c651]" />
+                            <div>
+                                <FaTools className="text-3xl text-[#00c651]" />
+                            </div>
                             <div className="md:ml-6">
                                 <h3 className="text-xl font-bold text-black">Réparation</h3>
                                 <p className="text-gray-700 mt-2 leading-relaxed">
@@ -120,17 +173,23 @@ export default function Services(props) {
                     </motion.h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
                         <motion.div variants={cardVariants} className="text-center p-6 bg-white rounded-lg shadow-md">
-                            <FaPencilRuler className="text-5xl text-[#f8e71c] mx-auto mb-4" />
+                            <div className={`bg-[#f8e71c] rounded-full ${iconContainerClass}`}>
+                                <FaPencilRuler className="text-3xl text-white" />
+                            </div>
                             <h3 className="text-xl font-bold text-black">Création de Logos</h3>
                             <p className="text-gray-700 mt-2 leading-relaxed">Conception d'une identité visuelle unique et mémorable qui reflète les valeurs de votre marque et se démarque de la concurrence.</p>
                         </motion.div>
                         <motion.div variants={cardVariants} className="text-center p-6 bg-white rounded-lg shadow-md">
-                            <FaPaintBrush className="text-5xl text-[#f8e71c] mx-auto mb-4" />
+                            <div className={`bg-[#f8e71c] rounded-full ${iconContainerClass}`}>
+                                <FaPaintBrush className="text-3xl text-white" />
+                            </div>
                             <h3 className="text-xl font-bold text-black">Flyers & supports</h3>
                             <p className="text-gray-700 mt-2 leading-relaxed">Création de supports de communication percutants pour votre marque : flyers, brochures, catalogues et affiches. Un design moderne qui capte l'attention.</p>
                         </motion.div>
                         <motion.div variants={cardVariants} className="text-center p-6 bg-white rounded-lg shadow-md">
-                            <FaCreditCard className="text-5xl text-[#f8e71c] mx-auto mb-4" />
+                            <div className={`bg-[#f8e71c] rounded-full ${iconContainerClass}`}>
+                                <FaCreditCard className="text-3xl text-white" />
+                            </div>
                             <h3 className="text-xl font-bold text-black">Cartes de visites</h3>
                             <p className="text-gray-700 mt-2 leading-relaxed">Démarquez-vous dès le premier contact avec des cartes de visite professionnelles et élégantes, conçues pour laisser une impression durable.</p>
                         </motion.div>
@@ -153,47 +212,65 @@ export default function Services(props) {
                     </motion.h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
                         <motion.div variants={cardVariants} className="text-center p-6 bg-gray-50 rounded-lg shadow-md">
-                            <FaIdCard className="text-5xl text-[#e70035] mx-auto mb-4" />
+                            <div className={`bg-[#e70035] rounded-full ${iconContainerClass}`}>
+                                <FaIdCard className="text-3xl text-white" />
+                            </div>
                             <h3 className="text-xl font-bold text-black">IFU</h3>
                             <p className="text-gray-700 mt-2 leading-relaxed">Nous simplifions l'obtention de votre Numéro d'Identifiant Fiscal (IFU), une étape clé pour toutes vos démarches administratives et commerciales.</p>
                         </motion.div>
                         <motion.div variants={cardVariants} className="text-center p-6 bg-gray-50 rounded-lg shadow-md">
-                            <FaFileSignature className="text-5xl text-[#e70035] mx-auto mb-4" />
+                            <div className={`bg-[#e70035] rounded-full ${iconContainerClass}`}>
+                                <FaFileAlt className="text-3xl text-white" />
+                            </div>
                             <h3 className="text-xl font-bold text-black">RCCM</h3>
                             <p className="text-gray-700 mt-2 leading-relaxed">Facilitez votre immatriculation au Registre du Commerce et du Crédit Mobilier (RCCM) pour lancer votre activité en toute légalité.</p>
                         </motion.div>
                         <motion.div variants={cardVariants} className="text-center p-6 bg-gray-50 rounded-lg shadow-md">
-                            <FaUserTie className="text-5xl text-[#e70035] mx-auto mb-4" />
+                            <div className={`bg-[#e70035] rounded-full ${iconContainerClass}`}>
+                                <FaGlobe className="text-3xl text-white" />
+                            </div>
                             <h3 className="text-xl font-bold text-black">C'EST MOI</h3>
                             <p className="text-gray-700 mt-2 leading-relaxed">Accompagnement dans les formalités d'obtention de votre identité numérique 'C'EST MOI', nécessaire pour les services gouvernementaux.</p>
                         </motion.div>
                         <motion.div variants={cardVariants} className="text-center p-6 bg-gray-50 rounded-lg shadow-md">
-                            <FaPassport className="text-5xl text-[#e70035] mx-auto mb-4" />
+                            <div className={`bg-[#e70035] rounded-full ${iconContainerClass}`}>
+                                <FaPassport className="text-3xl text-white" />
+                            </div>
                             <h3 className="text-xl font-bold text-black">CIP</h3>
                             <p className="text-gray-700 mt-2 leading-relaxed">Assistance complète pour les démarches et l'obtention de votre Carte d'Identité Professionnelle (CIP).</p>
                         </motion.div>
                         <motion.div variants={cardVariants} className="text-center p-6 bg-gray-50 rounded-lg shadow-md">
-                            <FaFileInvoice className="text-5xl text-[#e70035] mx-auto mb-4" />
+                            <div className={`bg-[#e70035] rounded-full ${iconContainerClass}`}>
+                                <FaShieldAlt className="text-3xl text-white" />
+                            </div>
                             <h3 className="text-xl font-bold text-black">Acte sécurisé</h3>
                             <p className="text-gray-700 mt-2 leading-relaxed">Délivrance d'actes sécurisés pour l'authentification et la protection de vos documents administratifs et juridiques.</p>
                         </motion.div>
                         <motion.div variants={cardVariants} className="text-center p-6 bg-gray-50 rounded-lg shadow-md">
-                            <FaTv className="text-5xl text-[#e70035] mx-auto mb-4" />
+                            <div className={`bg-[#e70035] rounded-full ${iconContainerClass}`}>
+                                <FaTv className="text-3xl text-white" />
+                            </div>
                             <h3 className="text-xl font-bold text-black">Réabonnement Canal+</h3>
                             <p className="text-gray-700 mt-2 leading-relaxed">Simplifiez la gestion de vos abonnements. Nous nous occupons de vos réabonnements Canal+ rapidement et sans tracas.</p>
                         </motion.div>
                         <motion.div variants={cardVariants} className="text-center p-6 bg-gray-50 rounded-lg shadow-md">
-                            <FaPassport className="text-5xl text-[#e70035] mx-auto mb-4" />
+                            <div className={`bg-[#e70035] rounded-full ${iconContainerClass}`}>
+                                <FaPassport className="text-3xl text-white" />
+                            </div>
                             <h3 className="text-xl font-bold text-black">Passeport</h3>
                             <p className="text-gray-700 mt-2 leading-relaxed">Accompagnement personnalisé pour le dépôt de dossier et le suivi des formalités d'obtention de votre passeport.</p>
                         </motion.div>
                         <motion.div variants={cardVariants} className="text-center p-6 bg-gray-50 rounded-lg shadow-md">
-                            <FaFileInvoice className="text-5xl text-[#e70035] mx-auto mb-4" />
+                            <div className={`bg-[#e70035] rounded-full ${iconContainerClass}`}>
+                                <FaFileInvoice className="text-3xl text-white" />
+                            </div>
                             <h3 className="text-xl font-bold text-black">Facture normalisée</h3>
                             <p className="text-gray-700 mt-2 leading-relaxed">Établissement de factures normalisées conformes aux réglementations en vigueur pour toutes vos transactions commerciales.</p>
                         </motion.div>
                         <motion.div variants={cardVariants} className="text-center p-6 bg-gray-50 rounded-lg shadow-md">
-                            <FaFileInvoice className="text-5xl text-[#e70035] mx-auto mb-4" />
+                            <div className={`bg-[#e70035] rounded-full ${iconContainerClass}`}>
+                                <FaMoneyBillWave className="text-3xl text-white" />
+                            </div>
                             <h3 className="text-xl font-bold text-black">Paiement factures</h3>
                             <p className="text-gray-700 mt-2 leading-relaxed">Service pratique de paiement de vos factures d'eau (SONEB) et d'électricité (SBEE) pour vous faire gagner du temps.</p>
                         </motion.div>

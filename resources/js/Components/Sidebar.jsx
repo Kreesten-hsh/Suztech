@@ -108,7 +108,7 @@ export default function Sidebar({ isOpen, onClose }) {
                                             onClick={onClose}
                                             className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                                                 url === href
-                                                    ? 'bg-blue-600 text-white shadow-lg'
+                                                    ? 'bg-[#00c651] text-white shadow-lg'
                                                     : 'hover:text-white'
                                             }`}
                                         >
