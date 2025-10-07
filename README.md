@@ -38,7 +38,7 @@ Le succès de SUZTECH est bâti sur l'engagement et l'expertise de ses leaders.
 | :---: | :---: | :--- |
 | **CEO & Stratégie** | **HOUNGBO Tobias** | Visionnaire, il définit l'orientation stratégique et le moteur d'innovation de l'entreprise. |
 | **Développeur Web Lead** | **AGBOTON Kreesten** | Architecte principal des solutions numériques. Spécialisé en Full-Stack (Web & Mobile) et en performance applicative. |
-| **Comptable & Finances** | **[Evrard SOKENOU]** | Garant de la santé financière, assurant la **gestion complète des opérations comptables, fiscales et sociales** de SUZTECH. |
+| **Comptable & Finances** | **Evrard SOKENOU** | Garant de la santé financière, assurant la **gestion complète des opérations comptables, fiscales et sociales** de SUZTECH. |
 
 -----
 
