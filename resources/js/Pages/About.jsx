@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { motion } from 'framer-motion';
 import { 
-    FaBolt, FaShieldAlt, FaHeadset, FaStar
+    FaBolt, FaShieldAlt, FaHeadset, FaStar, FaMoneyBillAlt // <-- Ajout de FaMoneyBillAlt
 } from 'react-icons/fa';
 
 export default function About() {
@@ -22,7 +22,7 @@ export default function About() {
         <GuestLayout>
             <Head title="À propos" />
 
-            {/* Section Bannière */}
+            {/* Section Bannière (inchangée) */}
             <motion.section
                 className="relative text-white py-28 sm:py-36 text-center shadow-xl overflow-hidden"
                 initial="hidden"
@@ -54,7 +54,7 @@ export default function About() {
                 </div>
             </motion.section>
 
-            {/* Section Notre Histoire */}
+            {/* Section Notre Histoire (inchangée) */}
             <motion.section 
                 className="py-20 px-6 lg:px-20 bg-white"
                 initial="hidden"
@@ -91,7 +91,7 @@ export default function About() {
                 </div>
             </motion.section>
 
-            {/* Section Notre Approche */}
+            {/* Section Notre Approche (inchangée) */}
             <motion.section 
                 className="py-20 px-6 lg:px-20 bg-gray-50"
                 initial="hidden"
@@ -154,7 +154,7 @@ export default function About() {
                 </div>
             </motion.section>
 
-            {/* Section Notre Équipe */}
+            {/* Section Notre Équipe (MISE À JOUR) */}
             <motion.section 
                 className="py-20 px-6 lg:px-20 bg-white"
                 initial="hidden"
@@ -164,10 +164,12 @@ export default function About() {
             >
                 <div className="container mx-auto text-center">
                     <h2 className="text-3xl sm:text-4xl font-bold mb-14 text-gray-900">Notre Équipe</h2>
-                    <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-10 max-w-4xl mx-auto">
-                        {/* Profil du membre 1 */}
+                    {/* Utilisation de grid pour mieux gérer l'affichage de trois éléments et au-delà */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-items-center gap-10 max-w-6xl mx-auto">
+                        
+                        {/* 1. Profil du CEO */}
                         <motion.div 
-                            className="p-8 bg-gray-50 rounded-xl shadow-md"
+                            className="p-8 bg-gray-50 rounded-xl shadow-lg w-full max-w-sm"
                             whileHover="hover"
                             initial="hidden"
                             whileInView="visible"
@@ -184,9 +186,9 @@ export default function About() {
                             <p className="text-gray-600 mt-3">Tobias, notre CEO, est le moteur stratégique de SUZTECH. Fort de son expérience en leadership et en informatique, il supervise chaque aspect de l'entreprise. Sa vision est de transformer les défis technologiques en opportunités de croissance, en cultivant une culture d'innovation et de confiance.</p>
                         </motion.div>
 
-                        {/* Profil du membre 2 */}
+                        {/* 2. Profil du Développeur Web */}
                         <motion.div 
-                            className="p-8 bg-gray-50 rounded-xl shadow-md"
+                            className="p-8 bg-gray-50 rounded-xl shadow-lg w-full max-w-sm"
                             whileHover="hover"
                             initial="hidden"
                             whileInView="visible"
@@ -194,7 +196,7 @@ export default function About() {
                             variants={cardVariants}
                         >
                             <img 
-                                src="/images/Dev.jpg" 
+                                src="/images/Dev.jpg"
                                 alt="AGBOTON Kreesten" 
                                 className="w-40 h-40 rounded-full mx-auto mb-4 object-cover border-4 border-gray-200"
                             />
@@ -202,6 +204,26 @@ export default function About() {
                             <p className="text-lg font-semibold text-gray-700">Développeur Web</p>
                             <p className="text-gray-600 mt-3">Kreesten est notre développeur web principal, un architecte du numérique passionné par la création de solutions sur mesure. Il excelle dans la conception de sites web modernes et performants. Son engagement pour la qualité et son attention aux détails sont essentiels pour offrir des produits numériques qui dépassent les attentes de nos clients.</p>
                         </motion.div>
+                        
+                        {/* 3. NOUVEAU PROFIL : Le Comptable */}
+                        <motion.div 
+                            className="p-8 bg-gray-50 rounded-xl shadow-lg w-full max-w-sm"
+                            whileHover="hover"
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            variants={cardVariants}
+                        >
+                            <img 
+                                src="/images/comptable.jpg"
+                                alt="Evrard SOKENOU" 
+                                className="w-40 h-40 rounded-full mx-auto mb-4 object-cover border-4 border-gray-200"
+                            />
+                            <h4 className="text-2xl font-bold mt-4 text-gray-800">Evrard SOKENOU</h4>
+                            <p className="text-lg font-semibold text-gray-700">Comptable (Gestion Financière)</p>
+                            <p className="text-gray-600 mt-3">Responsable de la <span className="font-bold">gestion financière, comptable, fiscale et sociale</span> de SUZTECH. Ce rôle est essentiel pour assurer la conformité légale et optimiser les ressources de l'entreprise.</p>
+                        </motion.div>
+
                     </div>
                 </div>
             </motion.section>
