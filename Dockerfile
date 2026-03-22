@@ -22,6 +22,11 @@ RUN npm ci
 COPY jsconfig.json postcss.config.js tailwind.config.js vite.config.js ./
 COPY resources ./resources
 COPY public ./public
+# PROD: Render translates service env vars into Docker build args for Docker services.
+ARG VITE_APP_NAME=SUZTECH
+ARG VITE_FORMSPREE_URL=
+ENV VITE_APP_NAME=$VITE_APP_NAME
+ENV VITE_FORMSPREE_URL=$VITE_FORMSPREE_URL
 RUN npm run build
 
 FROM php:8.2-fpm-alpine AS runtime
@@ -63,12 +68,9 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chown -R www-data:www-data /var/www/html /var/cache/nginx /tmp/nginx \
     && chmod +x /entrypoint.sh \
     && chmod -R ug+rwx /var/www/html/storage /var/www/html/bootstrap/cache \
-    # PERF: Warm the Laravel package manifest and runtime caches during the image build.
+    # PERF: Warm the Laravel package manifest during the image build without freezing runtime env values.
     && php artisan package:discover --ansi \
-    && php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache \
-    && php artisan event:cache
+    && php artisan optimize:clear
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 CMD curl -fsS http://127.0.0.1/up || exit 1
 

@@ -9,7 +9,14 @@ log() {
 
 cd /var/www/html
 
+# PROD: Always clear stale build-time artifacts before booting the application.
+log "Clearing Laravel bootstrap caches"
+php artisan optimize:clear
+
 if [ "${APP_ENV:-production}" = "production" ]; then
+    # PROD: Warm Laravel caches only after Render runtime variables are available.
+    log "Rebuilding Laravel bootstrap caches for production"
+    php artisan optimize
     # PROD: Apply pending schema changes automatically on production boots before serving traffic.
     log "Running database migrations"
     php artisan migrate --force

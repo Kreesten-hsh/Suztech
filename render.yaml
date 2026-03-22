@@ -3,11 +3,15 @@ services:
     name: suztech-web
     runtime: docker
     plan: free
+    branch: main
     dockerfilePath: ./Dockerfile
-    autoDeploy: true
+    autoDeployTrigger: commit
     healthCheckPath: /up
     envVars:
-      # PROD: Core Laravel runtime settings required for a secure Render deployment.
+      # PROD: Help Render target the Nginx listener inside the Docker container.
+      - key: PORT
+        value: "80"
+      # PROD: Core Laravel runtime settings for the web service.
       - key: APP_NAME
         value: SUZTECH
       - key: APP_ENV
@@ -15,9 +19,7 @@ services:
       - key: APP_DEBUG
         value: "false"
       - key: APP_KEY
-        value: "CHANGE_ME"
-      - key: APP_URL
-        value: https://CHANGE_ME.onrender.com
+        generateValue: true
       - key: APP_LOCALE
         value: fr
       - key: APP_FALLBACK_LOCALE
@@ -31,19 +33,19 @@ services:
         value: stderr
       - key: LOG_LEVEL
         value: info
-      # PROD: Use MySQL settings supplied by your production database provider.
+      # PROD: Use the external Aiven MySQL service managed outside Render.
       - key: DB_CONNECTION
         value: mysql
       - key: DB_HOST
-        value: "CHANGE_ME"
+        sync: false
       - key: DB_PORT
-        value: "3306"
+        sync: false
       - key: DB_DATABASE
-        value: "CHANGE_ME"
+        sync: false
       - key: DB_USERNAME
-        value: "CHANGE_ME"
+        sync: false
       - key: DB_PASSWORD
-        value: "CHANGE_ME"
+        sync: false
       # PROD: Keep Laravel stateful subsystems explicit for Render containers.
       - key: CACHE_STORE
         value: database
@@ -54,7 +56,7 @@ services:
       - key: SESSION_SECURE_COOKIE
         value: "true"
       - key: SESSION_DOMAIN
-        value: "CHANGE_ME"
+        value: "null"
       - key: QUEUE_CONNECTION
         value: sync
       - key: BROADCAST_CONNECTION
@@ -63,26 +65,26 @@ services:
       - key: FILESYSTEM_DISK
         value: cloudinary
       - key: CLOUDINARY_URL
-        value: "CHANGE_ME"
+        sync: false
       # PROD: Configure transactional email delivery for account and contact flows.
       - key: MAIL_MAILER
         value: smtp
       - key: MAIL_SCHEME
         value: tls
       - key: MAIL_HOST
-        value: "CHANGE_ME"
+        sync: false
       - key: MAIL_PORT
         value: "587"
       - key: MAIL_USERNAME
-        value: "CHANGE_ME"
+        sync: false
       - key: MAIL_PASSWORD
-        value: "CHANGE_ME"
+        sync: false
       - key: MAIL_FROM_ADDRESS
         value: no-reply@suztech.bj
       - key: MAIL_FROM_NAME
         value: SUZTECH
-      # PROD: Surface the Formspree endpoint to the Vite frontend at build time.
+      # PROD: Surface non-secret frontend values during the Docker build.
       - key: VITE_APP_NAME
         value: SUZTECH
       - key: VITE_FORMSPREE_URL
-        value: "CHANGE_ME"
+        sync: false

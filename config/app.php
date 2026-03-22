@@ -52,7 +52,12 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env(
+        'APP_URL',
+        env('RENDER_EXTERNAL_HOSTNAME')
+            ? 'https://'.env('RENDER_EXTERNAL_HOSTNAME')
+            : 'http://localhost'
+    ),
 
     /*
     |--------------------------------------------------------------------------
