@@ -15,9 +15,17 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // REMOVED: Never seed a trivial default user account in production containers.
+        if (app()->environment('local', 'testing')) {
+            User::factory()->create([
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+            ]);
+        }
+
+        // REMOVED: Production admin bootstrap must be a deliberate manual action.
+        // Create the first admin with:
+        // php artisan tinker
+        // User::create(['name' => 'Admin', 'email' => 'admin@example.com', 'password' => bcrypt('change-me-now'), 'is_admin' => true]);
     }
 }

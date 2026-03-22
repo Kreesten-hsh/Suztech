@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 
+const createEmptyField = (id) => ({
+    id,
+    file: null,
+    preview: null,
+});
+
 export default function Create({ auth, categories }) {
-    const [imageFields, setImageFields] = useState([{ id: 1, file: null, preview: null }]);
+    const [imageFields, setImageFields] = useState([createEmptyField(1)]);
+    const imageFieldsRef = useRef(imageFields);
 
     const { data, setData, post, processing, errors } = useForm({
         name: '',
@@ -13,36 +20,72 @@ export default function Create({ auth, categories }) {
         images: [],
     });
 
+    useEffect(() => {
+        imageFieldsRef.current = imageFields;
+    }, [imageFields]);
+
+    useEffect(() => {
+        return () => {
+            imageFieldsRef.current.forEach((field) => {
+                if (field.preview) {
+                    URL.revokeObjectURL(field.preview);
+                }
+            });
+        };
+    }, []);
+
+    const syncFormImages = (fields) => {
+        setData('images', fields.filter((field) => field.file).map((field) => field.file));
+    };
+
     const addImageField = () => {
-        const newFieldId = imageFields.length > 0 ? Math.max(...imageFields.map(f => f.id)) + 1 : 1;
-        setImageFields([...imageFields, { id: newFieldId, file: null, preview: null }]);
+        if (imageFields.length >= 5) {
+            return;
+        }
+
+        const newFieldId = imageFields.length > 0 ? Math.max(...imageFields.map((field) => field.id)) + 1 : 1;
+        setImageFields((previousFields) => [...previousFields, createEmptyField(newFieldId)]);
     };
 
     const removeImageField = (id) => {
-        setImageFields(imageFields.filter(field => field.id !== id));
+        const fieldToRemove = imageFields.find((field) => field.id === id);
+
+        if (fieldToRemove?.preview) {
+            URL.revokeObjectURL(fieldToRemove.preview);
+        }
+
+        const updatedFields = imageFields.filter((field) => field.id !== id);
+        setImageFields(updatedFields.length > 0 ? updatedFields : [createEmptyField(1)]);
+
+        // FIX: Recompute the submitted images array whenever a preview field is removed.
+        syncFormImages(updatedFields);
     };
 
-    const handleFileChange = (e, id) => {
-        const file = e.target.files[0];
-        const updatedFields = imageFields.map(field => {
-            if (field.id === id) {
-                return {
-                    ...field,
-                    file: file,
-                    preview: file ? URL.createObjectURL(file) : null
-                };
+    const handleFileChange = (event, id) => {
+        const file = event.target.files?.[0] ?? null;
+
+        const updatedFields = imageFields.map((field) => {
+            if (field.id !== id) {
+                return field;
             }
-            return field;
-        });
-        setImageFields(updatedFields);
 
-        // Mettre à jour les données du formulaire avec tous les fichiers
-        const allFiles = updatedFields.filter(f => f.file).map(f => f.file);
-        setData('images', allFiles);
+            if (field.preview) {
+                URL.revokeObjectURL(field.preview);
+            }
+
+            return {
+                ...field,
+                file,
+                preview: file ? URL.createObjectURL(file) : null,
+            };
+        });
+
+        setImageFields(updatedFields);
+        syncFormImages(updatedFields);
     };
 
-    const submit = (e) => {
-        e.preventDefault();
+    const submit = (event) => {
+        event.preventDefault();
         post(route('admin.products.store'), {
             forceFormData: true,
         });
@@ -51,98 +94,166 @@ export default function Create({ auth, categories }) {
     return (
         <AdminLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Ajouter un produit</h2>}
+            header={<h2 className="text-xl font-semibold leading-tight text-gray-800">Ajouter un produit</h2>}
         >
             <Head title="Ajouter un produit" />
+
             <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 bg-white border-b border-gray-200">
-                            <form onSubmit={submit}>
-                                {/* Autres champs de formulaire (nom, catégorie, etc.) */}
-                                <div className="mb-4">
-                                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nom du produit</label>
+                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                        <div className="border-b border-gray-200 bg-white p-6">
+                            <form onSubmit={submit} className="space-y-6">
+                                {/* FIX: Associate label, field and validation error for the product name. */}
+                                <div>
+                                    <label htmlFor="product-name" className="block text-sm font-medium text-gray-700">
+                                        Nom du produit
+                                    </label>
                                     <input
                                         type="text"
-                                        id="name"
+                                        id="product-name"
                                         name="name"
                                         value={data.name}
-                                        onChange={(e) => setData('name', e.target.value)}
+                                        onChange={(event) => setData('name', event.target.value)}
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                        aria-required="true"
+                                        aria-invalid={Boolean(errors.name)}
+                                        aria-describedby={errors.name ? 'product-name-error' : undefined}
                                     />
-                                    {errors.name && <div className="text-red-500 text-sm mt-1">{errors.name}</div>}
+                                    {errors.name && (
+                                        <p id="product-name-error" className="mt-1 text-sm text-red-500" role="alert">
+                                            {errors.name}
+                                        </p>
+                                    )}
                                 </div>
-                                <div className="mb-4">
-                                    <label htmlFor="category_id" className="block text-sm font-medium text-gray-700">Catégorie</label>
+
+                                {/* FIX: Associate label, field and validation error for the category selector. */}
+                                <div>
+                                    <label htmlFor="product-category" className="block text-sm font-medium text-gray-700">
+                                        Categorie
+                                    </label>
                                     <select
-                                        id="category_id"
+                                        id="product-category"
                                         name="category_id"
                                         value={data.category_id}
-                                        onChange={(e) => setData('category_id', e.target.value)}
+                                        onChange={(event) => setData('category_id', event.target.value)}
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                        aria-required="true"
+                                        aria-invalid={Boolean(errors.category_id)}
+                                        aria-describedby={errors.category_id ? 'product-category-error' : undefined}
                                     >
-                                        <option value="">Sélectionner une catégorie</option>
-                                        {categories.map(category => (
-                                            <option key={category.id} value={category.id}>{category.name}</option>
+                                        <option value="">Selectionner une categorie</option>
+                                        {categories.map((category) => (
+                                            <option key={category.id} value={category.id}>
+                                                {category.name}
+                                            </option>
                                         ))}
                                     </select>
-                                    {errors.category_id && <div className="text-red-500 text-sm mt-1">{errors.category_id}</div>}
+                                    {errors.category_id && (
+                                        <p id="product-category-error" className="mt-1 text-sm text-red-500" role="alert">
+                                            {errors.category_id}
+                                        </p>
+                                    )}
                                 </div>
-                                <div className="mb-4">
-                                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+
+                                {/* FIX: Associate label, field and validation error for the description textarea. */}
+                                <div>
+                                    <label htmlFor="product-description" className="block text-sm font-medium text-gray-700">
+                                        Description
+                                    </label>
                                     <textarea
-                                        id="description"
+                                        id="product-description"
                                         name="description"
                                         value={data.description}
-                                        onChange={(e) => setData('description', e.target.value)}
+                                        onChange={(event) => setData('description', event.target.value)}
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                                    ></textarea>
-                                    {errors.description && <div className="text-red-500 text-sm mt-1">{errors.description}</div>}
+                                        rows="6"
+                                        aria-invalid={Boolean(errors.description)}
+                                        aria-describedby={errors.description ? 'product-description-error' : undefined}
+                                    />
+                                    {errors.description && (
+                                        <p id="product-description-error" className="mt-1 text-sm text-red-500" role="alert">
+                                            {errors.description}
+                                        </p>
+                                    )}
                                 </div>
-                                <div className="mb-4">
-                                    <label htmlFor="price" className="block text-sm font-medium text-gray-700">Prix</label>
+
+                                {/* FIX: Associate label, field and validation error for the product price. */}
+                                <div>
+                                    <label htmlFor="product-price" className="block text-sm font-medium text-gray-700">
+                                        Prix
+                                    </label>
                                     <input
                                         type="number"
                                         step="0.01"
-                                        id="price"
+                                        id="product-price"
                                         name="price"
                                         value={data.price}
-                                        onChange={(e) => setData('price', e.target.value)}
+                                        onChange={(event) => setData('price', event.target.value)}
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                        aria-required="true"
+                                        aria-invalid={Boolean(errors.price)}
+                                        aria-describedby={errors.price ? 'product-price-error' : undefined}
                                     />
-                                    {errors.price && <div className="text-red-500 text-sm mt-1">{errors.price}</div>}
+                                    {errors.price && (
+                                        <p id="product-price-error" className="mt-1 text-sm text-red-500" role="alert">
+                                            {errors.price}
+                                        </p>
+                                    )}
                                 </div>
 
-                                {/* Gestion dynamique des champs d'images */}
-                                <div className="mb-4">
-                                    <label className="block text-sm font-medium text-gray-700">Images du produit</label>
-                                    {imageFields.map((field, index) => (
-                                        <div key={field.id} className="flex items-center space-x-2 mt-2">
-                                            <input
-                                                type="file"
-                                                onChange={(e) => handleFileChange(e, field.id)}
-                                                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                                            />
-                                            {field.preview && (
-                                                <div className="relative w-16 h-16 rounded-md overflow-hidden">
-                                                    <img src={field.preview} alt="Aperçu" className="w-full h-full object-cover" />
-                                                </div>
-                                            )}
-                                            {imageFields.length > 1 && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => removeImageField(field.id)}
-                                                    className="p-2 text-red-600 hover:text-red-800"
-                                                >
-                                                    &#x2715;
-                                                </button>
-                                            )}
-                                        </div>
-                                    ))}
+                                <div>
+                                    <div className="flex items-center justify-between">
+                                        <label className="block text-sm font-medium text-gray-700">Images du produit</label>
+                                        <span className="text-sm text-gray-500">{imageFields.length}/5</span>
+                                    </div>
+
+                                    <div className="mt-2 space-y-3">
+                                        {imageFields.map((field, index) => (
+                                            <div key={field.id} className="flex items-center gap-3">
+                                                <input
+                                                    type="file"
+                                                    id={`product-image-${field.id}`}
+                                                    accept="image/*"
+                                                    onChange={(event) => handleFileChange(event, field.id)}
+                                                    className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
+                                                    aria-label={`Selectionner l'image ${index + 1} du produit`}
+                                                />
+
+                                                {field.preview && (
+                                                    <div className="relative h-16 w-16 overflow-hidden rounded-md">
+                                                        <img
+                                                            src={field.preview}
+                                                            alt={`Apercu de l'image ${index + 1} du produit`}
+                                                            className="h-full w-full object-cover"
+                                                        />
+                                                    </div>
+                                                )}
+
+                                                {imageFields.length > 1 && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeImageField(field.id)}
+                                                        aria-label={`Supprimer le champ image ${index + 1}`}
+                                                        className="p-2 text-red-600 hover:text-red-800"
+                                                    >
+                                                        &#x2715;
+                                                    </button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {errors.images && (
+                                        <p className="mt-2 text-sm text-red-500" role="alert">
+                                            {errors.images}
+                                        </p>
+                                    )}
+
                                     <button
                                         type="button"
                                         onClick={addImageField}
-                                        className="mt-2 px-4 py-2 text-sm font-semibold text-white bg-green-500 rounded-md shadow-sm hover:bg-green-600"
+                                        disabled={imageFields.length >= 5}
+                                        className="mt-3 rounded-md bg-green-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-60"
                                     >
                                         Ajouter une image
                                     </button>
@@ -150,9 +261,10 @@ export default function Create({ auth, categories }) {
 
                                 <button
                                     type="submit"
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700"
-                                    disabled={processing}>
-                                    Ajouter
+                                    className="rounded-md bg-blue-600 px-4 py-2 text-white shadow-sm hover:bg-blue-700"
+                                    disabled={processing}
+                                >
+                                    {processing ? 'Ajout en cours...' : 'Ajouter'}
                                 </button>
                             </form>
                         </div>

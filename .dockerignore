@@ -1,0 +1,23 @@
+# SECURITY: Exclude local secrets, VCS data and build artifacts from the Docker build context.
+.git
+.github
+.idea
+.vscode
+node_modules
+vendor
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/testing/*
+storage/framework/views/*
+bootstrap/cache/*.php
+public/build
+docker-compose*.yml
+.env
+.env.*
+!.env.example
+tests
+docs

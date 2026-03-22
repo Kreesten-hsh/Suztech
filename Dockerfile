@@ -1,46 +1,81 @@
-# Utilise une image PHP avec FPM et le système d'exploitation Alpine
-FROM php:8.2-fpm-alpine
+FROM composer:2 AS vendor
 
-# Installe les dépendances système nécessaires, y compris Nginx, Git et Node.js
-RUN apk add --no-cache \
-    nginx \
-    git \
-    curl \
-    libpng-dev \
-    libjpeg-turbo-dev \
-    libwebp-dev \
-    zip \
-    unzip \
-    nodejs \
-    npm \
-    && docker-php-ext-configure gd --with-jpeg --with-webp \
-    && docker-php-ext-install -j$(nproc) gd pdo_mysql
+WORKDIR /app
 
-# Installe Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# SECURITY: Install PHP dependencies in an isolated stage to keep the final image minimal.
+COPY composer.json composer.lock ./
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --no-scripts \
+    --prefer-dist \
+    --optimize-autoloader
 
-# Copie tous les fichiers de l'application dans le répertoire de travail
-COPY . /var/www/html
+FROM node:20-alpine AS frontend
 
-# Définir le répertoire de travail
+WORKDIR /app
+
+# PERF: Use npm ci for deterministic installs in CI/CD and production builds.
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY jsconfig.json postcss.config.js tailwind.config.js vite.config.js ./
+COPY resources ./resources
+COPY public ./public
+RUN npm run build
+
+FROM php:8.2-fpm-alpine AS runtime
+
 WORKDIR /var/www/html
 
-# Installe les dépendances PHP et Node.js
-# Exécute la compilation du frontend et crée le lien symbolique de stockage
-RUN composer install --no-dev --optimize-autoloader \
-    && npm install \
-    && npm run build \
-    && php artisan storage:link
+# SECURITY: Install only runtime packages required by PHP-FPM and Nginx.
+RUN apk add --no-cache \
+        nginx \
+        curl \
+        libpng-dev \
+        libjpeg-turbo-dev \
+        libwebp-dev \
+        zip \
+        unzip \
+        libcap-utils \
+    && docker-php-ext-configure gd --with-jpeg --with-webp \
+    && docker-php-ext-install -j"$(nproc)" gd pdo_mysql opcache \
+    && setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx \
+    && mkdir -p \
+        /var/cache/nginx \
+        /tmp/nginx \
+        /var/www/html/storage \
+        /var/www/html/storage/framework/cache \
+        /var/www/html/storage/framework/sessions \
+        /var/www/html/storage/framework/views \
+        /var/www/html/bootstrap/cache
 
-# Copie le fichier de configuration Nginx
-COPY .docker/nginx/default.conf /etc/nginx/nginx.conf
+# SECURITY: Copy the application after .dockerignore filtering to avoid leaking local secrets into the image.
+COPY --chown=www-data:www-data . .
+COPY --from=vendor --chown=www-data:www-data /app/vendor ./vendor
+COPY --from=frontend --chown=www-data:www-data /app/public/build ./public/build
+COPY --chown=www-data:www-data .docker/nginx/default.conf /etc/nginx/nginx.conf
+COPY --chown=www-data:www-data .docker/php/opcache.ini /usr/local/etc/php/conf.d/zz-opcache.ini
+# PROD: Use the repository entrypoint so Render startup, migrations, and background services stay centralized.
+COPY entrypoint.sh /entrypoint.sh
 
-# Définir les permissions
-# L'utilisateur `www-data` existe dans l'image PHP, donc cette commande fonctionnera
-RUN chown -R www-data:www-data /var/www/html && chmod -R 775 /var/www/html/storage
+# SECURITY: Ensure writable runtime directories are owned by the unprivileged user.
+RUN chown -R www-data:www-data /var/www/html /var/cache/nginx /tmp/nginx \
+    && chmod +x /entrypoint.sh \
+    && chmod -R ug+rwx /var/www/html/storage /var/www/html/bootstrap/cache \
+    # PERF: Warm the Laravel package manifest and runtime caches during the image build.
+    && php artisan package:discover --ansi \
+    && php artisan config:cache \
+    && php artisan route:cache \
+    && php artisan view:cache \
+    && php artisan event:cache
 
-# Expose le port HTTP
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 CMD curl -fsS http://127.0.0.1/up || exit 1
+
 EXPOSE 80
 
-# Commande de démarrage : lance les deux services PHP-FPM et Nginx
-CMD ["sh", "-c", "php-fpm -F & nginx -g 'daemon off;'"]
+# SECURITY: Run the final container as the unprivileged www-data user.
+USER www-data
+
+# PROD: Delegate container startup to the shared entrypoint script instead of an inline shell command.
+ENTRYPOINT ["/entrypoint.sh"]

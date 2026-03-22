@@ -13,12 +13,15 @@ class EmailVerificationNotificationController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // PERF: Keep this verification route controller-based so route:cache can be generated in production images.
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->route($request->user()->is_admin ? 'admin.dashboard' : 'home');
         }
 
         $request->user()->sendEmailVerificationNotification();
 
-        return back()->with('status', 'verification-link-sent');
+        return redirect()
+            ->route('verification.notice')
+            ->with('status', 'verification-link-sent');
     }
 }

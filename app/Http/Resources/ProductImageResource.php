@@ -16,8 +16,10 @@ class ProductImageResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'url' => url('storage/' . $this->path),
-            'path' => $this->path
+            // PROD: Keep legacy local images working while Cloudinary-backed rows expose their durable remote URL.
+            'url' => str_starts_with($this->path, 'http://') || str_starts_with($this->path, 'https://')
+                ? $this->path
+                : url('storage/' . $this->path),
         ];
     }
 }

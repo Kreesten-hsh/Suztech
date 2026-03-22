@@ -47,6 +47,12 @@ return [
             'report' => false,
         ],
 
+        'cloudinary' => [
+            // PROD: Route product uploads through Cloudinary so Render redeploys do not wipe media assets.
+            'driver' => 'cloudinary',
+            'url' => env('CLOUDINARY_URL'),
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

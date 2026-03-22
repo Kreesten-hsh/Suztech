@@ -1,12 +1,15 @@
 import React from 'react';
-import Header from '@/Components/Header';
+import FlashMessage from '@/Components/FlashMessage';
 import Footer from '@/Components/Footer';
+import Header from '@/Components/Header';
 
-export default function Guest({ children }) {
+export default function GuestLayout({ children }) {
     return (
         <div>
             <Header />
-            <main className="pt-20">
+            {/* FIX: Render global flash feedback inside the shared guest layout. */}
+            <FlashMessage />
+            <main id="main-content" className="pt-20">
                 {children}
             </main>
             <Footer />

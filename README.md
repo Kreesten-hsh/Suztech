@@ -1,71 +1,176 @@
+# SUZTECH
 
+SUZTECH est une plateforme Laravel + Inertia dediee a la presentation des services SUZTECH, a la boutique produits et a l'administration interne. Le projet met en avant des services informatiques, du design et de l'accompagnement administratif au Benin.
 
-# 🚀 SUZTECH : Partenaire d'Innovation Technologique au Bénin
+## Mission et positionnement
 
-Bienvenue sur le dépôt officiel de **SUZTECH**. Nous sommes votre partenaire de confiance spécialisé dans les **solutions technologiques sur mesure** et l'**innovation numérique** au Bénin. Notre mission est de transformer les défis digitaux en opportunités de croissance durable.
+SUZTECH accompagne ses clients avec une approche simple :
 
------
+- Efficacite : livrer des solutions rapides, stables et utiles.
+- Securite : proteger les donnees et reduire les surfaces de risque.
+- Partenariat : accompagner de la demande initiale jusqu'a l'exploitation.
+- Excellence : maintenir un niveau de qualite propre en frontend, backend et operations.
 
-## ✨ Notre Mission et Philosophie
+## Domaines d'expertise
 
-Chez SUZTECH, nous nous engageons à rendre la technologie de pointe **accessible**, **performante** et **fiable** pour tous.
+- Developpement web moderne avec Laravel, Inertia.js et React.
+- Boutique et vitrines digitales optimisees pour la performance.
+- Conseil IT, maintenance et accompagnement technique.
+- Services administratifs et prestations numeriques.
 
-| Icône | Pilier | Rôle Stratégique |
-| :---: | :--- | :--- |
-| ⚡ | **Efficacité** | Développer des solutions performantes, rapides et optimisées, axées sur la valeur client. |
-| 🛡️ | **Sécurité** | Garantir la protection et la confidentialité des données grâce à des architectures robustes. |
-| 🤝 | **Partenariat** | Offrir un accompagnement personnalisé, de la conception stratégique au déploiement technique. |
-| ⭐ | **Excellence** | Maintenir des standards de qualité élevés et livrer des produits numériques qui dépassent les attentes. |
+## Equipe dirigeante
 
------
+- HOUNGBO Tobias : CEO et strategie.
+- AGBOTON Kreesten : developpement web lead.
+- Evrard SOKENOU : comptabilite et finances.
 
-## 💻 Domaines d'Expertise Technique
+## Liens utiles
 
-Nous mettons notre savoir-faire au service de votre transformation digitale, avec une expertise solide dans :
+- LinkedIn SUZTECH : <https://www.linkedin.com/company/suztech/>
+- Email SUZTECH : <mailto:Suztech7@gmail.com>
+- Facebook : <https://www.facebook.com/profile.php?id=100086739134224>
+- X : <https://x.com/SUZTECH2?t=hh-GpztTL6dZBrQmsJbIWw&s=08>
+- Instagram : <https://www.instagram.com/suztech2?igsh=MTVvOXMwb3RlaHp2dw==>
+- WhatsApp : <https://wa.me/22961012941>
+- YouTube : <https://youtube.com/@suztech?si=fg27sf30vr66OXrX>
 
-  * **Développement Mobile & Natif** 📱 : Applications puissantes et performantes avec **React Native**, couvrant divers besoins (utilitaires, sécurité, applications métiers).
-  * **Conception Web & E-commerce** 🌐 : Maîtrise des architectures modernes (**Inertia.js, React, Laravel**) pour des plateformes rapides, sécurisées et optimisées pour la conversion.
-  * **Audit et Conseil IT** 🧠 : Diagnostic, optimisation d'infrastructures, sécurité des réseaux et stratégie technologique.
-  * **Maintenance et Support** 🔧 : Assurer la pérennité et la résilience de vos systèmes.
+## Stack technique
 
------
+- Backend : Laravel 12, PHP 8.2, MySQL
+- Frontend : React 18, Inertia.js v2, Vite 7, Tailwind CSS v3
+- Tests : Pest PHP
+- Runtime production : Docker, PHP-FPM, Nginx, Render.com
 
-## 🧑‍🤝‍🧑 Notre Équipe Dirigeante
+## Installation et developpement local
 
-Le succès de SUZTECH est bâti sur l'engagement et l'expertise de ses leaders.
+### Prerequis
 
-| Rôle | Membre | Expertise Principale |
-| :---: | :---: | :--- |
-| **CEO & Stratégie** | **HOUNGBO Tobias** | Visionnaire, il définit l'orientation stratégique et le moteur d'innovation de l'entreprise. |
-| **Développeur Web Lead** | **AGBOTON Kreesten** | Architecte principal des solutions numériques. Spécialisé en Full-Stack (Web & Mobile) et en performance applicative. |
-| **Comptable & Finances** | **Evrard SOKENOU** | Garant de la santé financière, assurant la **gestion complète des opérations comptables, fiscales et sociales** de SUZTECH. |
+- PHP 8.2+
+- Composer 2+
+- Node.js 20+
+- MySQL 8+ ou MariaDB compatible
 
------
+### Installation
 
-## 🔗 Contacter SUZTECH
+```bash
+cp .env.example .env
+composer install
+npm install
+php artisan key:generate
+```
 
-| Plateforme | Lien |
-| :---: | :--- |
-| **LinkedIn** | [https://www.linkedin.com/company/suztech/](https://www.linkedin.com/company/suztech/) |
-| **Email** | [Suztech7@gmail.com](Suztech7@gmail.com) |
-| **Facebook** | [https://www.facebook.com/profile.php?id=100086739134224](https://www.facebook.com/profile.php?id=100086739134224) |
-| **X** | [https://x.com/SUZTECH2?t=hh-GpztTL6dZBrQmsJbIWw&s=08](https://x.com/SUZTECH2?t=hh-GpztTL6dZBrQmsJbIWw&s=08) |
-| **Instagram** | [https://www.instagram.com/suztech2?igsh=MTVvOXMwb3RlaHp2dw==](https://www.instagram.com/suztech2?igsh=MTVvOXMwb3RlaHp2dw==) |
-| **Whatsapp** | [https://wa.me/2290161012941](https://wa.me/2290161012941) |
-| **Youtube** | [https://youtube.com/@suztech?si=fg27sf30vr66OXrX](https://youtube.com/@suztech?si=fg27sf30vr66OXrX) |
+### Configuration de la base
 
------
+Renseignez les variables MySQL dans `.env`, puis lancez :
 
-## 🔗 Me Contacter (AGBOTON Kreesten)
+```bash
+php artisan migrate
+php artisan storage:link
+```
 
-En tant que Développeur Web Lead, je suis votre contact privilégié pour les partenariats et les discussions techniques.
+`storage:link` est indispensable pour exposer les images produits stockees sur le disque `public`.
 
-| Plateforme | Lien |
-| :---: | :--- |
-| **GitHub** | [https://github.com/Kreesten-hsh](https://github.com/Kreesten-hsh) |
-| **LinkedIn** | [https://www.linkedin.com/in/kreesten-agboton-4817a1382/](https://www.linkedin.com/in/kreesten-agboton-4817a1382/) |
-| **Email** | [akreesten@gmail.com](akreesten@gmail.com) |
+### Lancer l'application
 
------
+Dans un terminal :
 
-**SUZTECH : L'innovation, c'est notre moteur.** 🚀
+```bash
+php artisan serve
+```
+
+Dans un second terminal :
+
+```bash
+npm run dev
+```
+
+L'application est ensuite disponible sur `http://127.0.0.1:8000`.
+
+### Lancer les tests
+
+```bash
+php artisan test
+```
+
+Ou seulement la suite feature :
+
+```bash
+php artisan test --testsuite=Feature
+```
+
+## Authentification et architecture
+
+- L'authentification publique est geree par `CustomAuthController` dans `routes/web.php`.
+- Le fichier `routes/auth.php` est conserve comme trace documentaire mais n'est plus charge par `bootstrap/app.php`.
+- Les routes Breeze de reinitialisation / confirmation de mot de passe ne sont donc pas exposees.
+
+## Deploiement Render.com
+
+### Mode de deploiement
+
+Le projet est concu pour etre deploie via le `Dockerfile` racine. Render construit l'image puis execute le conteneur Nginx + PHP-FPM inclus.
+
+### Variables d'environnement requises
+
+Copiez `.env.production.example` comme base et renseignez au minimum :
+
+- `APP_KEY`
+- `APP_URL`
+- `DB_HOST`
+- `DB_PORT`
+- `DB_DATABASE`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+- `MAIL_MAILER`
+- `MAIL_HOST`
+- `MAIL_PORT`
+- `MAIL_USERNAME`
+- `MAIL_PASSWORD`
+- `MAIL_FROM_ADDRESS`
+- `MAIL_FROM_NAME`
+- `SESSION_SECURE_COOKIE=true`
+- `LOG_CHANNEL=stderr`
+- `QUEUE_CONNECTION=sync`
+- `VITE_FORMSPREE_URL`
+
+### Checklist de mise en production
+
+1. Creer le service web Render a partir du depot.
+2. Laisser Render construire l'image via le `Dockerfile`.
+3. Renseigner les variables d'environnement de production.
+4. Executer les migrations :
+
+```bash
+php artisan migrate --force
+```
+
+5. Verifier la sante du service via `/up`.
+6. Tester les e-mails de verification et les parcours admin.
+
+### Uploads et restauration des medias
+
+Les images produits sont stockees sur le disque Laravel `public`, donc sous `storage/app/public/products`.
+
+En production, deux strategies possibles :
+
+- Monter un volume persistant sur le repertoire de stockage si vous gardez le disque local.
+- Externaliser les medias vers un service objet/CDN. La variable `CLOUDINARY_URL` est documentee dans `.env.production.example` pour ce cas.
+
+Si vous restaurez une sauvegarde locale des uploads :
+
+```bash
+php artisan storage:link
+```
+
+Puis recopiez le contenu sauvegarde dans `storage/app/public/` avant de remettre le trafic.
+
+### Mail et verification d'email
+
+La verification d'email Laravel est active. Le SMTP de production doit donc etre configure avant ouverture publique, sinon les nouveaux comptes ne recevront pas leur lien de verification.
+
+## Notes operations
+
+- Les caches Laravel (`config`, `route`, `view`, `event`) sont chauffes au build Docker.
+- OPcache est active en production.
+- Les assets Vite sous `/build/` sont servis avec des headers cache `immutable`.
+- `VITE_FORMSPREE_URL` est un parametre frontend compile au build. Si vous le changez sur Render, rebuild obligatoire.

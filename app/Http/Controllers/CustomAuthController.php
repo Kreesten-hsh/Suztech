@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -29,12 +31,14 @@ class CustomAuthController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-        $user = auth()->user();
+        $user = $request->user();
+
+        // FIX: Redirect non-admin users to the public home page instead of an admin-only route.
         if ($user && $user->is_admin) {
             return redirect()->route('admin.dashboard');
         }
 
-        return redirect()->intended(route('admin.products.index'));
+        return redirect()->route('home');
     }
 
     /**
@@ -59,12 +63,18 @@ class CustomAuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'password' => Hash::make($request->password),
         ]);
+
+        // FIX: Dispatch the Registered event so Laravel sends the email verification notification.
+        event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect()->route('admin.products.index');
+        // FIX: Send newly registered users to the public home page with a welcome flash message.
+        return redirect()
+            ->route('home')
+            ->with('success', 'Bienvenue sur SUZTECH. Verifiez votre adresse e-mail pour activer toutes les fonctionnalites.');
     }
 
     /**

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
+import SEO from '@/Components/SEO';
 import { 
     FaLaptopCode, FaTools, FaPencilRuler, FaIdCard, FaFileInvoice, 
     FaNetworkWired, FaCog, FaPaintBrush, FaCreditCard, 
@@ -58,7 +59,12 @@ export default function Services(props) {
 
     return (
         <GuestLayout>
-            <Head title="Services" />
+            {/* FIX: Add reusable SEO metadata for the services page. */}
+            <SEO
+                title="Services"
+                description="Explorez les services SUZTECH en informatique, design et accompagnement administratif pour particuliers et entreprises."
+                type="website"
+            />
 
             {/* Bannière de la page Services */}
             <section 

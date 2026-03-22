@@ -1,13 +1,19 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaClock } from 'react-icons/fa';
+import SEO from '@/Components/SEO';
+import { FaClock, FaEnvelope, FaMapMarkerAlt, FaPhoneAlt } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import {
+    CONTACT_EMAIL,
+    CONTACT_PHONE_DISPLAY,
+    CONTACT_PHONE_URL,
+    FORMSPREE_URL,
+} from '@/constants/business';
 
 export default function Contact() {
     const sectionVariants = {
         hidden: { opacity: 0, y: 50 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
     };
 
     const listItemVariants = {
@@ -17,105 +23,139 @@ export default function Contact() {
 
     return (
         <GuestLayout>
-            <Head title="Contact" />
+            {/* FIX: Add reusable SEO metadata for the contact page. */}
+            <SEO
+                title="Contact"
+                description="Contactez SUZTECH a Porto-Novo pour vos besoins en informatique, design et prestations administratives."
+                type="website"
+            />
 
-            {/* Bannière */}
             <motion.section
-                className="bg-[#00c651] text-white py-20 sm:py-40 text-center"
+                className="bg-[#00c651] py-20 text-center text-white sm:py-40"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
                 <div className="container mx-auto px-4">
-                    <h1 className="text-4xl sm:text-5xl font-bold">Contactez-nous</h1>
+                    <h1 className="text-4xl font-bold sm:text-5xl">Contactez-nous</h1>
                     <p className="mt-4 text-lg text-white">
-                        Une question ? Un projet ? Notre équipe est là pour vous accompagner.
+                        Une question ? Un projet ? Notre equipe est la pour vous accompagner.
                     </p>
                 </div>
             </motion.section>
 
-            {/* Formulaire + infos */}
-            <section className="py-16 sm:py-24 px-6 lg:px-20 bg-white">
+            <section className="bg-white px-6 py-16 sm:py-24 lg:px-20">
                 <div className="container mx-auto max-w-6xl">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                        {/* Formulaire */}
+                    <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
                         <motion.div
-                            className="bg-white p-8 rounded-lg shadow border border-gray-200"
+                            className="rounded-lg border border-gray-200 bg-white p-8 shadow"
                             initial="hidden"
                             animate="visible"
                             variants={sectionVariants}
                         >
-                            <h2 className="text-2xl font-semibold mb-6 text-black">Envoyez-nous un message</h2>
-                            <form 
-                                action="https://formspree.io/f/xeolvzbr" 
-                                method="POST"
-                                className="space-y-4"
-                            >
+                            <h2 className="mb-6 text-2xl font-semibold text-black">Envoyez-nous un message</h2>
+                            <form action={FORMSPREE_URL} method="POST" className="space-y-4">
                                 <input type="hidden" name="_language" value="fr" />
+
+                                {/* FIX: Keep the Formspree endpoint centralized and labels fully associated. */}
                                 <div>
-                                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Nom et Prénom</label>
-                                    <input type="text" id="name" name="Nom" required className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00c651]" />
+                                    <label htmlFor="contact-name" className="mb-1 block text-sm font-medium text-gray-700">
+                                        Nom et Prenom
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="contact-name"
+                                        name="Nom"
+                                        required
+                                        className="w-full rounded-md border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#00c651]"
+                                    />
                                 </div>
                                 <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Adresse Email</label>
-                                    <input type="email" id="email" name="Email" required className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00c651]" />
+                                    <label htmlFor="contact-email" className="mb-1 block text-sm font-medium text-gray-700">
+                                        Adresse Email
+                                    </label>
+                                    <input
+                                        type="email"
+                                        id="contact-email"
+                                        name="Email"
+                                        required
+                                        className="w-full rounded-md border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#00c651]"
+                                    />
                                 </div>
                                 <div>
-                                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">Objet</label>
-                                    <input type="text" id="subject" name="Objet" required className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00c651]" />
+                                    <label htmlFor="contact-subject" className="mb-1 block text-sm font-medium text-gray-700">
+                                        Objet
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="contact-subject"
+                                        name="Objet"
+                                        required
+                                        className="w-full rounded-md border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#00c651]"
+                                    />
                                 </div>
                                 <div>
-                                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                                    <textarea id="message" name="Message" rows="5" required className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00c651]"></textarea>
+                                    <label htmlFor="contact-message" className="mb-1 block text-sm font-medium text-gray-700">
+                                        Message
+                                    </label>
+                                    <textarea
+                                        id="contact-message"
+                                        name="Message"
+                                        rows="5"
+                                        required
+                                        className="w-full rounded-md border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#00c651]"
+                                    />
                                 </div>
-                                <button type="submit" className="w-full bg-[#00c651] text-white font-medium py-3 rounded-md hover:bg-[#009a3d] transition-colors duration-300">
+                                <button
+                                    type="submit"
+                                    className="w-full rounded-md bg-[#00c651] py-3 font-medium text-white transition-colors duration-300 hover:bg-[#009a3d]"
+                                >
                                     Envoyer le message
                                 </button>
                             </form>
                         </motion.div>
 
-                        {/* Coordonnées */}
                         <div>
                             <motion.div
-                                className="bg-white p-8 rounded-lg shadow border border-gray-200"
+                                className="rounded-lg border border-gray-200 bg-white p-8 shadow"
                                 initial="hidden"
                                 animate="visible"
                                 variants={sectionVariants}
                             >
-                                <h2 className="text-2xl font-semibold mb-6 text-black">Nos Coordonnées</h2>
+                                <h2 className="mb-6 text-2xl font-semibold text-black">Nos Coordonnees</h2>
                                 <motion.ul
-                                    className="space-y-6 text-gray-700 text-base"
+                                    className="space-y-6 text-base text-gray-700"
                                     initial="hidden"
                                     animate="visible"
                                     variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
                                 >
                                     <motion.li variants={listItemVariants} className="flex items-start space-x-3">
-                                        <FaMapMarkerAlt className="text-lg text-[#00c651] mt-1" />
+                                        <FaMapMarkerAlt className="mt-1 text-lg text-[#00c651]" />
                                         <div>
                                             <h4 className="font-semibold text-black">Adresse</h4>
-                                            <p>Tokpota, Poto-Novo, Bénin</p>
+                                            <p>Tokpota, Porto-Novo, Benin</p>
                                         </div>
                                     </motion.li>
                                     <motion.li variants={listItemVariants} className="flex items-start space-x-3">
-                                        <FaPhoneAlt className="text-lg text-[#00c651] mt-1" />
+                                        <FaPhoneAlt className="mt-1 text-lg text-[#00c651]" />
                                         <div>
-                                            <h4 className="font-semibold text-black">Téléphone</h4>
-                                            <a href="tel:+2290161012941" className="hover:text-[#00c651]">
-                                                01 61 01 29 41
+                                            <h4 className="font-semibold text-black">Telephone</h4>
+                                            <a href={CONTACT_PHONE_URL} className="hover:text-[#00c651]">
+                                                {CONTACT_PHONE_DISPLAY}
                                             </a>
                                         </div>
                                     </motion.li>
                                     <motion.li variants={listItemVariants} className="flex items-start space-x-3">
-                                        <FaEnvelope className="text-lg text-[#00c651] mt-1" />
+                                        <FaEnvelope className="mt-1 text-lg text-[#00c651]" />
                                         <div>
                                             <h4 className="font-semibold text-black">Email</h4>
-                                            <a href="mailto:contact@suztech.com" className="hover:text-[#00c651]">
-                                                Suztech7@gmail.com
+                                            <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-[#00c651]">
+                                                {CONTACT_EMAIL}
                                             </a>
                                         </div>
                                     </motion.li>
                                     <motion.li variants={listItemVariants} className="flex items-start space-x-3">
-                                        <FaClock className="text-lg text-[#00c651] mt-1" />
+                                        <FaClock className="mt-1 text-lg text-[#00c651]" />
                                         <div>
                                             <h4 className="font-semibold text-black">Horaire</h4>
                                             <p>Lundi - Vendredi : 8h00 - 18h00</p>
@@ -125,14 +165,13 @@ export default function Contact() {
                                 </motion.ul>
                             </motion.div>
 
-                            {/* Carte */}
                             <motion.div
-                                className="mt-8 rounded-lg overflow-hidden shadow border border-gray-200"
+                                className="mt-8 overflow-hidden rounded-lg border border-gray-200 shadow"
                                 initial="hidden"
                                 animate="visible"
                                 variants={{
                                     hidden: { opacity: 0, scale: 0.9 },
-                                    visible: { opacity: 1, scale: 1, transition: { duration: 0.6, delay: 0.2 } }
+                                    visible: { opacity: 1, scale: 1, transition: { duration: 0.6, delay: 0.2 } },
                                 }}
                             >
                                 <iframe
@@ -142,9 +181,9 @@ export default function Contact() {
                                     style={{ border: 0 }}
                                     allowFullScreen=""
                                     loading="lazy"
-                                    title="Localisation de notre bureau"
+                                    title="Localisation du bureau SUZTECH"
                                     referrerPolicy="no-referrer-when-downgrade"
-                                ></iframe>
+                                />
                             </motion.div>
                         </div>
                     </div>

@@ -32,7 +32,21 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user(),
+                // SECURITY: Share only the minimum authenticated user attributes required by the frontend.
+                'user' => $request->user()
+                    ? [
+                        'id' => $request->user()->id,
+                        'name' => $request->user()->name,
+                        'email' => $request->user()->email,
+                        'is_admin' => (bool) $request->user()->is_admin,
+                    ]
+                    : null,
+            ],
+            'flash' => [
+                // FIX: Share flash messages so auth redirects can surface success feedback in Inertia pages.
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+                'status' => fn () => $request->session()->get('status'),
             ],
         ];
     }

@@ -3,38 +3,52 @@
 use App\Models\User;
 
 test('login screen can be rendered', function () {
-    $response = $this->get('/login');
+    $response = $this->get(route('login'));
 
-    $response->assertStatus(200);
+    $response->assertOk();
 });
 
-test('users can authenticate using the login screen', function () {
+test('non admin users can authenticate through the custom login route', function () {
     $user = User::factory()->create();
 
-    $response = $this->post('/login', [
+    $response = $this->post(route('login'), [
         'email' => $user->email,
         'password' => 'password',
     ]);
 
-    $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $this->assertAuthenticatedAs($user);
+    $response->assertRedirect(route('home', absolute: false));
 });
 
-test('users can not authenticate with invalid password', function () {
+test('admin users are redirected to the admin dashboard after login', function () {
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->post(route('login'), [
+        'email' => $admin->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticatedAs($admin);
+    $response->assertRedirect(route('admin.dashboard', absolute: false));
+});
+
+test('users can not authenticate with an invalid password', function () {
     $user = User::factory()->create();
 
-    $this->post('/login', [
+    $response = $this->from(route('login'))->post(route('login'), [
         'email' => $user->email,
         'password' => 'wrong-password',
     ]);
 
     $this->assertGuest();
+    $response->assertSessionHasErrors('email');
+    $response->assertRedirect(route('login', absolute: false));
 });
 
-test('users can logout', function () {
+test('authenticated users can logout', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->post('/logout');
+    $response = $this->actingAs($user)->post(route('logout'));
 
     $this->assertGuest();
     $response->assertRedirect('/');

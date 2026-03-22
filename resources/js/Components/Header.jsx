@@ -1,124 +1,111 @@
 import React, { useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
-import Sidebar from '@/Components/Sidebar';
 import { FaWhatsapp } from 'react-icons/fa';
+import Sidebar from '@/Components/Sidebar';
+import { WHATSAPP_URL } from '@/constants/business';
 
 export default function Header() {
     const { url } = usePage();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
+        setIsSidebarOpen((previousState) => !previousState);
     };
 
     const headerVariants = {
         hidden: { y: -100, opacity: 0 },
-        visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 120, damping: 14, delay: 0.2 } },
-    };
-
-    const linkVariants = {
-        hover: { scale: 1.05, color: '#1f2937' },
-        tap: { scale: 0.95 },
+        visible: { y: 0, opacity: 1, transition: { type: 'spring', stiffness: 120, damping: 14, delay: 0.2 } },
     };
 
     return (
         <motion.header
-            className="fixed top-0 w-full z-50 bg-white/90 lg:backdrop-blur-md shadow-md"
+            className="fixed top-0 z-50 w-full bg-white/90 shadow-md lg:backdrop-blur-md"
             variants={headerVariants}
             initial="hidden"
             animate="visible"
         >
-            <div className="container mx-auto flex justify-between items-center p-4">
-                {/* Élément de remplissage pour le logo avec une hauteur augmentée pour correspondre au logo */}
-                <div className="w-40"></div> 
+            <div className="container mx-auto flex items-center justify-between p-4">
+                <div className="w-40"></div>
 
-                {/* Le logo en position absolue (flottant) ajusté pour être plus haut */}
                 <motion.div
-                    className="absolute left-4 -translate-y-1 z-10"
+                    className="absolute left-4 z-10 -translate-y-1"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                 >
-                    <a href="/">
+                    <Link href={route('home')} aria-label="Aller a la page d'accueil de SUZTECH">
                         <img
                             src="/images/logo.png"
-                            alt="SUZTECH Logo"
+                            alt="Logo SUZTECH"
                             className="h-32 w-auto lg:h-40"
                         />
-                    </a>
+                    </Link>
                 </motion.div>
 
-                {/* Navigation pour les grands écrans (lg) */}
-                <nav className="hidden lg:block">
+                <nav className="hidden lg:block" aria-label="Navigation principale">
                     <ul className="flex gap-8 font-semibold text-gray-600">
                         <li>
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link href="/" className={`${url === '/' ? 'text-[#00c651]' : 'hover:text-gray-800 transition-colors'}`}>
-                                    Accueil
-                                </Link>
-                            </motion.div>
+                            <Link href="/" className={`${url === '/' ? 'text-[#00c651]' : 'transition-colors hover:text-gray-800'}`}>
+                                Accueil
+                            </Link>
                         </li>
                         <li>
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link href="/services" className={`${url.startsWith('/services') ? 'text-[#00c651]' : 'hover:text-gray-800 transition-colors'}`}>
-                                    Services
-                                </Link>
-                            </motion.div>
+                            <Link href="/services" className={`${url.startsWith('/services') ? 'text-[#00c651]' : 'transition-colors hover:text-gray-800'}`}>
+                                Services
+                            </Link>
                         </li>
                         <li>
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link href="/shop" className={`${url.startsWith('/shop') ? 'text-[#00c651]' : 'hover:text-gray-800 transition-colors'}`}>
-                                    Boutique
-                                </Link>
-                            </motion.div>
+                            <Link href="/shop" className={`${url.startsWith('/shop') ? 'text-[#00c651]' : 'transition-colors hover:text-gray-800'}`}>
+                                Boutique
+                            </Link>
                         </li>
                         <li>
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link href="/about" className={`${url.startsWith('/about') ? 'text-[#00c651]' : 'hover:text-gray-800 transition-colors'}`}>
-                                    À propos
-                                </Link>
-                            </motion.div>
+                            <Link href="/about" className={`${url.startsWith('/about') ? 'text-[#00c651]' : 'transition-colors hover:text-gray-800'}`}>
+                                A propos
+                            </Link>
                         </li>
                         <li>
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link href="/contact" className={`${url.startsWith('/contact') ? 'text-[#00c651]' : 'hover:text-gray-800 transition-colors'}`}>
-                                    Contact
-                                </Link>
-                            </motion.div>
+                            <Link href="/contact" className={`${url.startsWith('/contact') ? 'text-[#00c651]' : 'transition-colors hover:text-gray-800'}`}>
+                                Contact
+                            </Link>
                         </li>
                     </ul>
                 </nav>
 
                 <div className="hidden sm:block">
-                    <motion.a 
-                        href={`https://wa.me/22961012941`}
+                    {/* FIX: Use the centralized business constant and preserve opener protection on the external CTA. */}
+                    <motion.a
+                        href={WHATSAPP_URL}
                         target="_blank"
-                        className="text-gray-800 font-bold p-3 rounded-lg border border-gray-400 flex items-center gap-2"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 rounded-lg border border-gray-400 p-3 font-bold text-gray-800"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        <FaWhatsapp className="text-xl text-green-500" />
+                        <FaWhatsapp className="text-xl text-green-500" aria-hidden="true" />
                         <span>WhatsApp</span>
                     </motion.a>
                 </div>
 
-                {/* Bouton du menu hamburger pour les petits écrans */}
                 <div className="lg:hidden">
                     <motion.button
+                        type="button"
                         onClick={toggleSidebar}
-                        className="text-gray-800 focus:outline-none"
+                        className="text-gray-800"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
+                        aria-label={isSidebarOpen ? 'Fermer le menu principal' : 'Ouvrir le menu principal'}
+                        aria-expanded={isSidebarOpen}
+                        aria-controls="mobile-navigation"
                     >
-                        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg className="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </motion.button>
                 </div>
             </div>
 
-            {/* Barre latérale */}
-            <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
         </motion.header>
     );
 }

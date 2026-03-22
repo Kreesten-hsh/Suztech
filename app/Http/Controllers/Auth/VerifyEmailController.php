@@ -14,14 +14,19 @@ class VerifyEmailController extends Controller
      */
     public function __invoke(EmailVerificationRequest $request): RedirectResponse
     {
+        // PERF: Keep this verification route controller-based so route:cache can be generated in production images.
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
+            return redirect()
+                ->route($request->user()->is_admin ? 'admin.dashboard' : 'home')
+                ->with('success', 'Votre adresse e-mail a ete verifiee avec succes.');
         }
 
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
         }
 
-        return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
+        return redirect()
+            ->route($request->user()->is_admin ? 'admin.dashboard' : 'home')
+            ->with('success', 'Votre adresse e-mail a ete verifiee avec succes.');
     }
 }
