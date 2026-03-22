@@ -7,6 +7,16 @@ log() {
     echo "[entrypoint] $1"
 }
 
+# PROD: Recreate Nginx runtime paths on every boot because /tmp may be ephemeral on Render.
+prepare_nginx_runtime() {
+    mkdir -p \
+        /tmp/nginx/client_temp \
+        /tmp/nginx/proxy_temp \
+        /tmp/nginx/fastcgi_temp \
+        /tmp/nginx/uwsgi_temp \
+        /tmp/nginx/scgi_temp
+}
+
 # PROD: Clear file-based Laravel optimization artifacts without touching the runtime cache store.
 clear_bootstrap_artifacts() {
     php artisan config:clear
@@ -20,6 +30,9 @@ cd /var/www/html
 if [ -n "${RENDER_EXTERNAL_HOSTNAME:-}" ] && [ "${APP_ENV:-local}" = "local" ]; then
     log "APP_ENV is local on Render; set APP_ENV=production in the Render environment settings"
 fi
+
+log "Preparing Nginx runtime directories"
+prepare_nginx_runtime
 
 # PROD: Always clear stale build-time artifacts before booting the application.
 log "Clearing Laravel bootstrap artifacts"
@@ -72,7 +85,7 @@ trap cleanup INT TERM
 
 # PROD: Keep Nginx in the foreground so the container lifecycle follows the web server state.
 log "Starting Nginx"
-nginx -g 'daemon off;'
+nginx -e /dev/stderr -g 'daemon off;'
 EXIT_CODE=$?
 
 cleanup
