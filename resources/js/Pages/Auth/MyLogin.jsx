@@ -1,5 +1,5 @@
 import React from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 
 export default function MyLogin() {
     const { data, setData, post, processing, errors } = useForm({
@@ -68,8 +68,9 @@ export default function MyLogin() {
                         Se connecter
                     </button>
                 </form>
-                <p className="mt-4 text-center text-gray-600">
-                    Pas encore de compte ? <Link href={route('register')} className="text-blue-600 hover:underline">Inscrivez-vous</Link>
+                {/* FIX: Hide the public registration entry point because the back office is now admin-only. */}
+                <p className="mt-4 text-center text-sm text-gray-500">
+                    Acces reserve a l administrateur SUZTECH.
                 </p>
             </div>
         </div>

@@ -27,12 +27,14 @@ Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/shop/{product}', [ShopController::class, 'show'])->name('shop.show');
 
-// SECURITY: Keep custom authentication routes accessible only to guests.
+// SECURITY: Expose the login page to everyone so stale non-admin sessions can be invalidated cleanly.
+Route::get('/login', [CustomAuthController::class, 'createLogin'])->name('login');
+
+// SECURITY: Keep credential submission and registration endpoints accessible only to guests.
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [CustomAuthController::class, 'createLogin'])->name('login');
     Route::post('/login', [CustomAuthController::class, 'storeLogin']);
-    Route::get('/register', [CustomAuthController::class, 'createRegister'])->name('register');
-    Route::post('/register', [CustomAuthController::class, 'storeRegister'])->middleware('throttle:5,1');
+    // FIX: Disable public registration and keep legacy /register URLs pointing back to the admin login.
+    Route::match(['get', 'post'], '/register', [CustomAuthController::class, 'disabledRegister'])->name('register');
 });
 
 // SECURITY: Logout must remain available only to authenticated users.

@@ -1,18 +1,15 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Event;
 
-test('registration screen can be rendered', function () {
+test('registration screen redirects back to login because public signup is disabled', function () {
     $response = $this->get(route('register'));
 
-    $response->assertOk();
+    $response->assertRedirect(route('login', absolute: false));
+    $response->assertSessionHas('error');
 });
 
-test('new users can register through the custom registration route', function () {
-    Event::fake([Registered::class]);
-
+test('public registration can not create a new user', function () {
     $response = $this->post(route('register'), [
         'name' => 'Aimee Hounkpe',
         'email' => 'aimee@example.com',
@@ -20,17 +17,10 @@ test('new users can register through the custom registration route', function ()
         'password_confirmation' => 'Password123!',
     ]);
 
-    $user = User::query()->where('email', 'aimee@example.com')->first();
-
-    expect($user)->not->toBeNull();
-    expect($user->email_verified_at)->toBeNull();
-
-    Event::assertDispatched(Registered::class);
-    $this->assertAuthenticatedAs($user);
-    $response->assertRedirect(route('home', absolute: false));
-    $response->assertSessionHas('success');
-    $this->assertDatabaseHas('users', [
+    $this->assertGuest();
+    $response->assertRedirect(route('login', absolute: false));
+    $response->assertSessionHas('error');
+    $this->assertDatabaseMissing('users', [
         'email' => 'aimee@example.com',
-        'name' => 'Aimee Hounkpe',
     ]);
 });
