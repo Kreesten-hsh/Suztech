@@ -7,19 +7,27 @@ log() {
     echo "[entrypoint] $1"
 }
 
+# PROD: Clear file-based Laravel optimization artifacts without touching the runtime cache store.
+clear_bootstrap_artifacts() {
+    php artisan config:clear
+    php artisan route:clear
+    php artisan view:clear
+    php artisan event:clear
+}
+
 cd /var/www/html
 
 # PROD: Always clear stale build-time artifacts before booting the application.
-log "Clearing Laravel bootstrap caches"
-php artisan optimize:clear
+log "Clearing Laravel bootstrap artifacts"
+clear_bootstrap_artifacts
 
 if [ "${APP_ENV:-production}" = "production" ]; then
+    # PROD: Run migrations before warming caches so database-backed features are ready.
+    log "Running database migrations"
+    php artisan migrate --force
     # PROD: Warm Laravel caches only after Render runtime variables are available.
     log "Rebuilding Laravel bootstrap caches for production"
     php artisan optimize
-    # PROD: Apply pending schema changes automatically on production boots before serving traffic.
-    log "Running database migrations"
-    php artisan migrate --force
 else
     # PROD: Skip forced migrations outside production to avoid surprising local environment changes.
     log "Skipping production migrations because APP_ENV=${APP_ENV:-undefined}"

@@ -68,9 +68,8 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chown -R www-data:www-data /var/www/html /var/cache/nginx /tmp/nginx \
     && chmod +x /entrypoint.sh \
     && chmod -R ug+rwx /var/www/html/storage /var/www/html/bootstrap/cache \
-    # PERF: Warm the Laravel package manifest during the image build without freezing runtime env values.
-    && php artisan package:discover --ansi \
-    && php artisan optimize:clear
+    # PERF: Warm only the package manifest during the image build; avoid any command that touches the cache store.
+    && php artisan package:discover --ansi
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 CMD curl -fsS http://127.0.0.1/up || exit 1
 
