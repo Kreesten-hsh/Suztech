@@ -10,7 +10,7 @@ services:
     envVars:
       # PROD: Help Render target the Nginx listener inside the Docker container.
       - key: PORT
-        value: "80"
+        value: "10000"
       # PROD: Core Laravel runtime settings for the web service.
       - key: APP_NAME
         value: SUZTECH

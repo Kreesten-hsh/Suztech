@@ -17,6 +17,10 @@ clear_bootstrap_artifacts() {
 
 cd /var/www/html
 
+if [ -n "${RENDER_EXTERNAL_HOSTNAME:-}" ] && [ "${APP_ENV:-local}" = "local" ]; then
+    log "APP_ENV is local on Render; set APP_ENV=production in the Render environment settings"
+fi
+
 # PROD: Always clear stale build-time artifacts before booting the application.
 log "Clearing Laravel bootstrap artifacts"
 clear_bootstrap_artifacts

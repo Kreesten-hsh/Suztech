@@ -42,10 +42,8 @@ RUN apk add --no-cache \
         libwebp-dev \
         zip \
         unzip \
-        libcap-utils \
     && docker-php-ext-configure gd --with-jpeg --with-webp \
     && docker-php-ext-install -j"$(nproc)" gd pdo_mysql opcache \
-    && setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx \
     && mkdir -p \
         /var/cache/nginx \
         /tmp/nginx \
@@ -71,9 +69,9 @@ RUN chown -R www-data:www-data /var/www/html /var/cache/nginx /tmp/nginx \
     # PERF: Warm only the package manifest during the image build; avoid any command that touches the cache store.
     && php artisan package:discover --ansi
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 CMD curl -fsS http://127.0.0.1/up || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 CMD curl -fsS http://127.0.0.1:10000/up || exit 1
 
-EXPOSE 80
+EXPOSE 10000
 
 # SECURITY: Run the final container as the unprivileged www-data user.
 USER www-data
