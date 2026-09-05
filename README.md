@@ -1,176 +1,121 @@
-# SUZTECH
+# SUZTECH Platform
 
-SUZTECH est une plateforme Laravel + Inertia dediee a la presentation des services SUZTECH, a la boutique produits et a l'administration interne. Le projet met en avant des services informatiques, du design et de l'accompagnement administratif au Benin.
+**Modern Monolithic Web Platform & Business Portal (Laravel 12, Inertia.js v2, React 18 & Docker)**
 
-## Mission et positionnement
+[![Laravel](https://img.shields.io/badge/Backend-Laravel%2012-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com/)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat-square&logo=php&logoColor=white)](https://www.php.net/)
+[![Inertia.js](https://img.shields.io/badge/Adapter-Inertia.js%20v2-9553E9?style=flat-square&logo=inertia&logoColor=white)](https://inertiajs.com/)
+[![React](https://img.shields.io/badge/Frontend-React%2018-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![Docker](https://img.shields.io/badge/Container-Docker-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Pest](https://img.shields.io/badge/Tests-Pest%20PHP-FA8072?style=flat-square)](https://pestphp.com/)
 
-SUZTECH accompagne ses clients avec une approche simple :
+SUZTECH is a full-stack digital services, e-commerce, and back-office management platform built for SUZTECH in Benin. The architecture couples a robust Laravel 12 application core with an Inertia.js v2 / React 18 single-page frontend, delivering client-side routing speed with server-side routing security and simplicity.
 
-- Efficacite : livrer des solutions rapides, stables et utiles.
-- Securite : proteger les donnees et reduire les surfaces de risque.
-- Partenariat : accompagner de la demande initiale jusqu'a l'exploitation.
-- Excellence : maintenir un niveau de qualite propre en frontend, backend et operations.
+---
 
-## Domaines d'expertise
+## 🏗️ Architecture & Technology Stack
 
-- Developpement web moderne avec Laravel, Inertia.js et React.
-- Boutique et vitrines digitales optimisees pour la performance.
-- Conseil IT, maintenance et accompagnement technique.
-- Services administratifs et prestations numeriques.
+### Backend Core (Laravel 12 & PHP 8.2)
+- **Framework**: Laravel 12 on PHP 8.2+ with strict typing.
+- **Persistence**: MySQL 8.0+ / MariaDB with transactional schema migrations.
+- **Authentication**: Custom authentication pipeline (`CustomAuthController`) implementing role-based access control (RBAC), CSRF protection, and email verification.
+- **Test Suite**: Automated feature and unit tests with Pest PHP.
 
-## Equipe dirigeante
+### Frontend Engine (Inertia.js v2 & React 18)
+- **View Layer**: React 18 components compiled via Vite 7.
+- **Bridge**: Inertia.js v2 (zero REST API boilerplate; server controllers directly return typed React props).
+- **Styling**: Tailwind CSS v3 design system with responsive utility constraints.
 
-- HOUNGBO Tobias : CEO et strategie.
-- AGBOTON Kreesten : developpement web lead.
-- Evrard SOKENOU : comptabilite et finances.
+### Production Runtime
+- **Containerization**: Multi-stage Docker image combining Nginx and PHP-FPM.
+- **Performance Optimizations**: Pre-warmed OPcache, compiled route and configuration caches, and immutable asset hashing.
+- **Deployment**: Production container deployment on Render.com.
 
-## Liens utiles
+---
 
-- LinkedIn SUZTECH : <https://www.linkedin.com/company/suztech/>
-- Email SUZTECH : <mailto:Suztech7@gmail.com>
-- Facebook : <https://www.facebook.com/profile.php?id=100086739134224>
-- X : <https://x.com/SUZTECH2?t=hh-GpztTL6dZBrQmsJbIWw&s=08>
-- Instagram : <https://www.instagram.com/suztech2?igsh=MTVvOXMwb3RlaHp2dw==>
-- WhatsApp : <https://wa.me/22961012941>
-- YouTube : <https://youtube.com/@suztech?si=fg27sf30vr66OXrX>
+## 🛠️ Local Development & Quickstart
 
-## Stack technique
-
-- Backend : Laravel 12, PHP 8.2, MySQL
-- Frontend : React 18, Inertia.js v2, Vite 7, Tailwind CSS v3
-- Tests : Pest PHP
-- Runtime production : Docker, PHP-FPM, Nginx, Render.com
-
-## Installation et developpement local
-
-### Prerequis
-
-- PHP 8.2+
+### Prerequisites
+- PHP 8.2 or later
 - Composer 2+
-- Node.js 20+
-- MySQL 8+ ou MariaDB compatible
+- Node.js 20+ & npm
+- MySQL 8.0+ / MariaDB
 
-### Installation
+### 1. Repository Setup & Dependencies
 
 ```bash
+# Clone repository
+git clone https://github.com/Kreesten-hsh/Suztech.git
+cd Suztech
+
+# Environment initialization
 cp .env.example .env
+
+# Install backend and frontend packages
 composer install
 npm install
+
+# Generate application key
 php artisan key:generate
 ```
 
-### Configuration de la base
+### 2. Database Configuration & Storage Link
 
-Renseignez les variables MySQL dans `.env`, puis lancez :
+Configure database credentials in `.env`, then execute migrations and create the symlink for public media:
 
 ```bash
 php artisan migrate
 php artisan storage:link
 ```
 
-`storage:link` est indispensable pour exposer les images produits stockees sur le disque `public`.
-
-### Lancer l'application
-
-Dans un terminal :
+### 3. Launch Development Servers
 
 ```bash
+# Terminal 1: PHP server
 php artisan serve
-```
 
-Dans un second terminal :
-
-```bash
+# Terminal 2: Vite hot-module replacement
 npm run dev
 ```
 
-L'application est ensuite disponible sur `http://127.0.0.1:8000`.
+The application will be accessible at `http://127.0.0.1:8000`.
 
-### Lancer les tests
+### 4. Running the Test Suite
 
 ```bash
+# Execute entire test suite
 php artisan test
-```
 
-Ou seulement la suite feature :
-
-```bash
+# Run feature tests specifically
 php artisan test --testsuite=Feature
 ```
 
-## Authentification et architecture
+---
 
-- L'authentification publique est geree par `CustomAuthController` dans `routes/web.php`.
-- Le fichier `routes/auth.php` est conserve comme trace documentaire mais n'est plus charge par `bootstrap/app.php`.
-- Les routes Breeze de reinitialisation / confirmation de mot de passe ne sont donc pas exposees.
+## 🚀 Production Deployment (Docker / Render.com)
 
-## Deploiement Render.com
+The repository includes a production-ready `Dockerfile` bundling Nginx and PHP-FPM.
 
-### Mode de deploiement
+### Deployment Checklist
 
-Le projet est concu pour etre deploie via le `Dockerfile` racine. Render construit l'image puis execute le conteneur Nginx + PHP-FPM inclus.
+1. Create a Web Service on Render pointing to the repository.
+2. Configure mandatory production environment variables (`APP_KEY`, `APP_URL`, `DB_HOST`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`, `SESSION_SECURE_COOKIE=true`).
+3. Run migrations on container startup:
+   ```bash
+   php artisan migrate --force
+   ```
+4. Verify application health using Laravel's native probe: `GET /up`.
 
-### Variables d'environnement requises
+---
 
-Copiez `.env.production.example` comme base et renseignez au minimum :
+## 👥 Core Team & Leadership
 
-- `APP_KEY`
-- `APP_URL`
-- `DB_HOST`
-- `DB_PORT`
-- `DB_DATABASE`
-- `DB_USERNAME`
-- `DB_PASSWORD`
-- `MAIL_MAILER`
-- `MAIL_HOST`
-- `MAIL_PORT`
-- `MAIL_USERNAME`
-- `MAIL_PASSWORD`
-- `MAIL_FROM_ADDRESS`
-- `MAIL_FROM_NAME`
-- `SESSION_SECURE_COOKIE=true`
-- `LOG_CHANNEL=stderr`
-- `QUEUE_CONNECTION=sync`
-- `VITE_FORMSPREE_URL`
+- **HOUNGBO Tobias** : CEO & Strategic Direction
+- **AGBOTON Kreesten** : Lead Web & Platform Developer
+- **SOKENOU Evrard** : Accounting & Finance Operations
 
-### Checklist de mise en production
+---
 
-1. Creer le service web Render a partir du depot.
-2. Laisser Render construire l'image via le `Dockerfile`.
-3. Renseigner les variables d'environnement de production.
-4. Executer les migrations :
+## 📄 License
 
-```bash
-php artisan migrate --force
-```
-
-5. Verifier la sante du service via `/up`.
-6. Tester les e-mails de verification et les parcours admin.
-
-### Uploads et restauration des medias
-
-Les images produits sont stockees sur le disque Laravel `public`, donc sous `storage/app/public/products`.
-
-En production, deux strategies possibles :
-
-- Monter un volume persistant sur le repertoire de stockage si vous gardez le disque local.
-- Externaliser les medias vers un service objet/CDN. La variable `CLOUDINARY_URL` est documentee dans `.env.production.example` pour ce cas.
-
-Si vous restaurez une sauvegarde locale des uploads :
-
-```bash
-php artisan storage:link
-```
-
-Puis recopiez le contenu sauvegarde dans `storage/app/public/` avant de remettre le trafic.
-
-### Mail et verification d'email
-
-La verification d'email Laravel est active. Le SMTP de production doit donc etre configure avant ouverture publique, sinon les nouveaux comptes ne recevront pas leur lien de verification.
-
-## Notes operations
-
-- Les caches Laravel (`config`, `route`, `view`, `event`) sont chauffes au build Docker.
-- OPcache est active en production.
-- Les assets Vite sous `/build/` sont servis avec des headers cache `immutable`.
-- `VITE_FORMSPREE_URL` est un parametre frontend compile au build. Si vous le changez sur Render, rebuild obligatoire.
+Proprietary enterprise project maintained by SUZTECH SARL.
